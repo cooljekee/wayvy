@@ -1,0 +1,30 @@
+# Environment — never commit
+.env
+.env.local
+.env.production
+backend/**/.env
+
+# Xcode
+*.xcuserstate
+xcuserdata/
+DerivedData/
+*.moved-aside
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivefile
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Go
+backend/**/tmp/
+backend/**/*.test
+
+# macOS
+.DS_Store
