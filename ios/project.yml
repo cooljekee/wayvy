@@ -1,0 +1,60 @@
+name: Wayvy
+options:
+  bundleIdPrefix: com.wayvy
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "15.0"
+  defaultConfig: Debug
+configs:
+  Debug: debug
+  Release: release
+settings:
+  SWIFT_VERSION: "6.0"
+  SWIFT_STRICT_CONCURRENCY: complete
+  TARGETED_DEVICE_FAMILY: "1"
+  IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+  MARKETING_VERSION: "1.0"
+  CURRENT_PROJECT_VERSION: "1"
+packages:
+  YandexMapsMobile:
+    url: https://github.com/yandex/mapkit-ios-sdk
+    from: 4.6.0
+
+targets:
+  Wayvy:
+    type: application
+    platform: iOS
+    configFiles:
+      Debug: Wayvy/Config/Config.debug.xcconfig
+      Release: Wayvy/Config/Config.xcconfig
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.wayvy.app
+    sources:
+      - path: Wayvy
+        excludes:
+          - Config/Config.xcconfig
+          - Config/Config.debug.xcconfig
+          - Config/Config.xcconfig.example
+    dependencies:
+      - package: YandexMapsMobile
+        product: YandexMapsMobile
+    info:
+      path: Wayvy/Info.plist
+      properties:
+        CFBundleDisplayName: Wayvy
+        CFBundleName: Wayvy
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        UILaunchStoryboardName: LaunchScreen
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIUserInterfaceStyle: Dark
+        APIBaseURL: $(API_BASE_URL)
+        YandexMapKitKey: $(YANDEX_MAPKIT_KEY)
+        NSLocationWhenInUseUsageDescription: "Wayvy использует геолокацию для записи маршрутов"
+        NSLocationAlwaysAndWhenInUseUsageDescription: "Wayvy записывает маршрут в фоне, пока ты гуляешь"
+        NSPhotoLibraryUsageDescription: "Выбери фото для точки маршрута"
+        NSCameraUsageDescription: "Сними фото прямо сейчас для точки"
+        NSMicrophoneUsageDescription: "Запиши голосовую заметку для точки"
+        UIBackgroundModes:
+          - location
