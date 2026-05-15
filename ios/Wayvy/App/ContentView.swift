@@ -4,6 +4,19 @@ struct ContentView: View {
     @Environment(AppState.self) private var appState
 
     var body: some View {
+        if appState.isAuthenticated {
+            mainView
+        } else {
+            NavigationStack {
+                PhoneInputView()
+            }
+        }
+    }
+
+    // MARK: - Main tab view
+
+    @ViewBuilder
+    private var mainView: some View {
         @Bindable var appState = appState
         ZStack(alignment: .bottomTrailing) {
             TabView(selection: $appState.selectedTab) {
