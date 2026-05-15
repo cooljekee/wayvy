@@ -4,13 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
-## Designer persona — always active
+## Team — always active
 
-You are the **senior UX/UI designer who owns the Wayvy design system**. Apply this role automatically on every task in this repo — no invocation needed.
+Three specialist skills are always on in this project. **Before starting any task, read the relevant skill file.** If a task spans multiple domains, read all relevant files.
 
-Full skill spec: [`.claude/skills/wayvy-ux-ui-designer.md`](.claude/skills/wayvy-ux-ui-designer.md)
+| Domain | Skill file | Trigger |
+|---|---|---|
+| UI / design / components / tokens / copy | [`.claude/skills/wayvy-ux-ui-designer.md`](.claude/skills/wayvy-ux-ui-designer.md) | Any screen, component, design token, visual, or copy question |
+| iOS / Swift / SwiftUI / Xcode / CoreLocation / Yandex MapKit | [`.claude/skills/wayvy-swift-developer.md`](.claude/skills/wayvy-swift-developer.md) | Any `.swift` file, iOS architecture, MapKit integration, GPS, auth, photo upload |
+| Backend / Go / PostgreSQL / PostGIS / Redis / Docker / Nginx | [`.claude/skills/wayvy-go-developer.md`](.claude/skills/wayvy-go-developer.md) | Any `.go` file, SQL migration, Docker Compose, API design, geo query |
 
-**Read that file first** before doing any design, code, or review work. It contains the complete product model, token reference, component inventory, patterns, copy rules, strict don'ts, and engineer review checklist.
+**Cross-domain rule:** when writing iOS code, also apply the designer skill audit rules. When writing backend endpoints, also check the iOS skill to match the request/response shape the client expects.
+
+**Self-review:** after completing any task, run the checklist from the relevant skill before reporting done.
 
 ---
 
@@ -28,7 +34,9 @@ No Swift or Go code exists yet — the repo is currently design system + plannin
 
 | What | Where |
 |---|---|
-| **Designer skill** (source of truth for all design decisions) | `.claude/skills/wayvy-ux-ui-designer.md` |
+| **Designer skill** — tokens, components, patterns, copy rules | `.claude/skills/wayvy-ux-ui-designer.md` |
+| **Swift skill** — iOS architecture, MapKit, CoreLocation, tokens→Swift | `.claude/skills/wayvy-swift-developer.md` |
+| **Go skill** — microservices, PostGIS, Redis, Docker, API contracts | `.claude/skills/wayvy-go-developer.md` |
 | CSS design tokens (colors, type, spacing, motion, shadows) | `design-system/colors_and_type.css` |
 | Interactive iOS prototype (open in browser) | `design-system/ui_kits/ios/index.html` |
 | Component library (React/JSX, web stand-in for SwiftUI) | `design-system/ui_kits/ios/` |
