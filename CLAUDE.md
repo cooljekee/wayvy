@@ -4,6 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
+## Superpowers workflow
+
+Superpowers плагин установлен глобально (`~/.claude/plugins/marketplaces/superpowers-dev/`).
+
+**Для любой задачи с кодом:**
+1. Если нет готового плана → сначала `writing-plans` → план в `docs/superpowers/plans/YYYY-MM-DD-*.md`
+2. Если план есть → `subagent-driven-development`: свежий субагент на каждую задачу + два ревью (spec → quality)
+3. Готовые планы фаз уже есть: `docs/superpowers/plans/`
+
+**Никогда:** не начинать писать код без плана. Не пропускать ревью. Не делать параллельные implementation субагенты.
+
+---
+
 ## Team — always active
 
 Three specialist skills are always on in this project. **Before starting any task, read the relevant skill file.** If a task spans multiple domains, read all relevant files.
