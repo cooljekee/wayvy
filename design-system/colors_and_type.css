@@ -1,0 +1,335 @@
+/* =====================================================================
+   Wayvy — Colors & Type
+   Design tokens for the urban-walks social app.
+   Light/dark themed; map-first; Strava-bold but Komoot-quiet.
+   ===================================================================== */
+
+/* ---- Fonts (Google Fonts substitutes for iOS SF Pro) ---- */
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+/* =====================================================================
+   ROOT TOKENS
+   ===================================================================== */
+:root {
+  /* ── Brand accents ──────────────────────────────────────────────
+     Three carefully tuned hues — each maps to one MapPin variant.
+     All tested against light + dark Yandex map tiles for legibility. */
+  --wv-coral-50:  #FFF1EE;
+  --wv-coral-100: #FFD9D2;
+  --wv-coral-200: #FFB1A4;
+  --wv-coral-300: #FF8876;
+  --wv-coral-400: #FF6F58;
+  --wv-coral-500: #FF5A4E;  /* primary brand, own routes, recording */
+  --wv-coral-600: #E84436;
+  --wv-coral-700: #C2331F;
+
+  --wv-teal-50:   #E6F8FA;
+  --wv-teal-100:  #B9ECF0;
+  --wv-teal-200:  #7ADBE2;
+  --wv-teal-300:  #3FC6D2;
+  --wv-teal-400:  #14B8C7;  /* followed users' routes */
+  --wv-teal-500:  #0A9CA9;
+  --wv-teal-600:  #0A7F8A;
+
+  --wv-amber-50:  #FFF6E0;
+  --wv-amber-100: #FCE3A8;
+  --wv-amber-200: #F8CE6E;
+  --wv-amber-400: #F4B740;  /* events accent, warning */
+  --wv-amber-500: #E09B1F;
+
+  /* ── Map polyline colors (canonical) ────────────────────────────
+     Two distinct hues, equally readable on light + dark tiles.
+     Stroke width matters too — 4pt own, 3pt followed. */
+  --wv-route-own:      var(--wv-coral-500);
+  --wv-route-own-glow: rgba(255, 90, 78, 0.28);
+  --wv-route-follow:      var(--wv-teal-400);
+  --wv-route-follow-glow: rgba(20, 184, 199, 0.28);
+
+  /* ── Warm neutral ink scale ─────────────────────────────────────
+     Slightly cool ink rather than pure black — urban, not corporate. */
+  --wv-ink-900: #0E1116;
+  --wv-ink-800: #16191F;
+  --wv-ink-700: #1F232C;
+  --wv-ink-600: #2A2F3A;
+  --wv-ink-500: #3A4150;
+  --wv-ink-400: #5B6577;
+  --wv-ink-300: #8A93A4;
+  --wv-ink-200: #C5CBD6;
+  --wv-ink-100: #E7EAF0;
+  --wv-ink-50:  #F4F6FA;
+  --wv-white:   #FFFFFF;
+
+  /* ── Semantic ───────────────────────────────────────────────── */
+  --wv-success: #2DBF6B;
+  --wv-warning: #F4B740;
+  --wv-danger:  #E5484D;
+
+  /* ── Visibility chip colors (public / followers / private) ──── */
+  --wv-vis-public:    #2DBF6B;     /* green — open */
+  --wv-vis-followers: #14B8C7;     /* teal — circle */
+  --wv-vis-private:   #5B6577;     /* slate — closed */
+
+  /* =====================================================================
+     SEMANTIC TOKENS — LIGHT (default)
+     ===================================================================== */
+
+  /* surfaces & ink */
+  --bg:        #F4F6FA;   /* app bg behind sheets */
+  --bg-map:    #E9ECEF;   /* light map tile color (placeholder) */
+  --surface:   #FFFFFF;   /* cards, sheets */
+  --surface-2: #F8FAFC;   /* nested surface */
+  --surface-3: #EDF0F5;   /* subtle wells */
+  --overlay:   rgba(255, 255, 255, 0.78);  /* glass over map */
+  --overlay-strong: rgba(255, 255, 255, 0.92);
+
+  --fg:    #0E1116;       /* primary text */
+  --fg-2:  #3A4150;       /* secondary text */
+  --fg-3:  #5B6577;       /* tertiary, metadata */
+  --fg-4:  #8A93A4;       /* placeholders, disabled */
+  --fg-inverse: #FFFFFF;
+
+  --border:        rgba(14, 17, 22, 0.08);
+  --border-strong: rgba(14, 17, 22, 0.14);
+  --divider:       rgba(14, 17, 22, 0.06);
+
+  --accent:        var(--wv-coral-500);
+  --accent-hover:  var(--wv-coral-600);
+  --accent-press:  var(--wv-coral-700);
+  --accent-soft:   var(--wv-coral-50);
+
+  --focus-ring: 0 0 0 3px rgba(255, 90, 78, 0.32);
+
+  /* shadows — soft, layered, never dramatic; map UI floats */
+  --shadow-1: 0 1px 2px rgba(14, 17, 22, 0.04), 0 1px 1px rgba(14, 17, 22, 0.03);
+  --shadow-2: 0 4px 12px rgba(14, 17, 22, 0.06), 0 1px 2px rgba(14, 17, 22, 0.04);
+  --shadow-3: 0 12px 28px rgba(14, 17, 22, 0.10), 0 2px 6px rgba(14, 17, 22, 0.05);
+  --shadow-sheet: 0 -8px 32px rgba(14, 17, 22, 0.10);
+  --shadow-pin:   0 2px 6px rgba(14, 17, 22, 0.22), 0 1px 2px rgba(14, 17, 22, 0.12);
+}
+
+/* =====================================================================
+   DARK THEME — first-class. Used at night, in city streets.
+   ===================================================================== */
+[data-theme="dark"], .dark, .theme-dark {
+  --bg:        #0B0D11;
+  --bg-map:    #14171D;
+  --surface:   #16191F;
+  --surface-2: #1F232C;
+  --surface-3: #2A2F3A;
+  --overlay:   rgba(22, 25, 31, 0.78);
+  --overlay-strong: rgba(22, 25, 31, 0.92);
+
+  --fg:    #F4F6FA;
+  --fg-2:  #C5CBD6;
+  --fg-3:  #8A93A4;
+  --fg-4:  #5B6577;
+  --fg-inverse: #0E1116;
+
+  --border:        rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --divider:       rgba(255, 255, 255, 0.06);
+
+  --accent:        var(--wv-coral-500);
+  --accent-hover:  var(--wv-coral-400);
+  --accent-press:  var(--wv-coral-300);
+  --accent-soft:   rgba(255, 90, 78, 0.14);
+
+  --focus-ring: 0 0 0 3px rgba(255, 90, 78, 0.45);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --shadow-2: 0 6px 14px rgba(0, 0, 0, 0.45), 0 2px 4px rgba(0, 0, 0, 0.30);
+  --shadow-3: 0 16px 36px rgba(0, 0, 0, 0.55), 0 4px 10px rgba(0, 0, 0, 0.35);
+  --shadow-sheet: 0 -12px 40px rgba(0, 0, 0, 0.55);
+  --shadow-pin:   0 2px 8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* =====================================================================
+   TYPOGRAPHY TOKENS
+   Production target: SF Pro Display + SF Pro Text (iOS native).
+   Web/preview substitute: Bricolage Grotesque (display) + Manrope (text).
+   Mono: JetBrains Mono.
+   ===================================================================== */
+:root {
+  --font-display: "Bricolage Grotesque", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans:    "Manrope", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+
+  /* type scale — iOS-leaning, 8pt grid-compatible */
+  --text-2xs:   11px;   /* metadata, micro labels */
+  --text-xs:    12px;   /* captions */
+  --text-sm:    14px;   /* secondary UI text */
+  --text-base:  16px;   /* body */
+  --text-lg:    18px;   /* emphasised body, list item titles */
+  --text-xl:    22px;   /* sheet titles, card headings */
+  --text-2xl:   28px;   /* screen titles */
+  --text-3xl:   34px;   /* hero numbers (distance, time) */
+  --text-4xl:   44px;   /* recording HUD primary readout */
+  --text-5xl:   60px;   /* marketing-only */
+
+  --leading-tight: 1.1;
+  --leading-snug:  1.25;
+  --leading-base:  1.45;
+  --leading-loose: 1.6;
+
+  --tracking-tight:  -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.02em;
+  --tracking-caps:   0.06em;
+
+  /* spacing (8pt grid, AllTrails-style) */
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* radii — generous, iOS-leaning */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;     /* sheets, large cards */
+  --radius-pill: 999px;
+
+  /* motion */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);   /* iOS-feel decel */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* light overshoot */
+  --dur-fast:   140ms;
+  --dur-base:   220ms;
+  --dur-slow:   360ms;
+  --dur-sheet:  420ms;
+}
+
+/* =====================================================================
+   SEMANTIC TYPE CLASSES
+   ===================================================================== */
+.wv-display-1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-5xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+}
+.wv-display-2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+}
+.wv-h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+}
+.wv-h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+}
+.wv-h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+}
+.wv-h4 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--fg);
+}
+.wv-body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  color: var(--fg);
+}
+.wv-body-strong {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  color: var(--fg);
+}
+.wv-secondary {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-sm);
+  line-height: var(--leading-base);
+  color: var(--fg-2);
+}
+.wv-caption {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--fg-3);
+}
+.wv-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  line-height: 1;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+.wv-metric {
+  /* big map-readout numbers — distance, time, pace */
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-4xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+.wv-metric-label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+.wv-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--fg);
+}
+
+/* =====================================================================
+   ELEMENT DEFAULTS (opt-in via .wv-typeset)
+   ===================================================================== */
+.wv-typeset {
+  font-family: var(--font-sans);
+  color: var(--fg);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+}
+.wv-typeset h1 { font: 700 var(--text-3xl)/var(--leading-tight) var(--font-display); letter-spacing: var(--tracking-tight); margin: 0 0 var(--space-4); }
+.wv-typeset h2 { font: 700 var(--text-2xl)/var(--leading-tight) var(--font-display); letter-spacing: var(--tracking-tight); margin: var(--space-6) 0 var(--space-3); }
+.wv-typeset h3 { font: 600 var(--text-xl)/var(--leading-snug) var(--font-display); letter-spacing: var(--tracking-tight); margin: var(--space-5) 0 var(--space-2); }
+.wv-typeset p  { margin: 0 0 var(--space-3); }
+.wv-typeset code { font-family: var(--font-mono); font-size: 0.92em; padding: 2px 5px; background: var(--surface-3); border-radius: var(--radius-xs); }

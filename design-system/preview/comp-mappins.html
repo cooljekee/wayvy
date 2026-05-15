@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Map Pins</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  body { background:
+    radial-gradient(circle at 25% 30%, #DDE2EA 0 1px, transparent 1.5px),
+    radial-gradient(circle at 75% 65%, #DDE2EA 0 1px, transparent 1.5px),
+    linear-gradient(180deg, #ECEEF2 0%, #E2E6EC 100%);
+  }
+  .card { background: transparent; }
+  .row3 { display:flex; gap:34px; align-items:flex-end; justify-content:space-around; padding:18px 0 6px; }
+  .pin-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .pin { position:relative; filter: drop-shadow(0 4px 6px rgba(14,17,22,.25)); }
+  .lbl { font: 700 11px var(--font-sans); color: #1F232C; }
+  .tok { font: 500 10px var(--font-mono); color: #3A4150; }
+</style></head>
+<body>
+<div class="card">
+  <div class="row3">
+    <div class="pin-wrap">
+      <svg class="pin" width="44" height="54" viewBox="0 0 44 54">
+        <path d="M22 53 C30 38, 42 32, 42 21 A20 20 0 1 0 2 21 C2 32, 14 38, 22 53Z" fill="#FF5A4E" stroke="#fff" stroke-width="2.5"/>
+        <circle cx="22" cy="21" r="6.5" fill="#fff"/>
+      </svg>
+      <div class="lbl">Own</div>
+      <div class="tok">coral · circle dot</div>
+    </div>
+    <div class="pin-wrap">
+      <svg class="pin" width="44" height="54" viewBox="0 0 44 54">
+        <path d="M22 53 C30 38, 42 32, 42 21 A20 20 0 1 0 2 21 C2 32, 14 38, 22 53Z" fill="#14B8C7" stroke="#fff" stroke-width="2.5"/>
+        <g fill="#fff">
+          <circle cx="22" cy="18" r="4.5"/>
+          <path d="M13.5 30 C13.5 25, 17.5 23.5, 22 23.5 C26.5 23.5, 30.5 25, 30.5 30 Z"/>
+        </g>
+      </svg>
+      <div class="lbl">Friend</div>
+      <div class="tok">teal · avatar glyph</div>
+    </div>
+    <div class="pin-wrap">
+      <svg class="pin" width="44" height="54" viewBox="0 0 44 54">
+        <path d="M 15 2 H 29 A 13 13 0 0 1 42 15 V 29 A 13 13 0 0 1 29 42 H 27 L 22 52 L 17 42 H 15 A 13 13 0 0 1 2 29 V 15 A 13 13 0 0 1 15 2 Z" fill="#0E1116" stroke="#fff" stroke-width="2.5"/>
+        <text x="22" y="17" text-anchor="middle" font-family="Manrope, system-ui, sans-serif" font-weight="700" font-size="7" letter-spacing="0.8" fill="#8A93A4">МАЙ</text>
+        <text x="22" y="35" text-anchor="middle" font-family="Bricolage Grotesque, system-ui, sans-serif" font-weight="800" font-size="17" letter-spacing="-0.4" fill="#FF5A4E">18</text>
+      </svg>
+      <div class="lbl">Event</div>
+      <div class="tok">date chip · matches EventCard</div>
+    </div>
+    <div class="pin-wrap">
+      <svg class="pin" width="34" height="42" viewBox="0 0 34 42">
+        <path d="M17 41 C23 30, 32 25, 32 16 A15 15 0 1 0 2 16 C2 25, 11 30, 17 41Z" fill="#FF5A4E" stroke="#fff" stroke-width="2"/>
+        <circle cx="17" cy="16" r="4.5" fill="#fff"/>
+      </svg>
+      <div class="lbl">Small</div>
+      <div class="tok">distant zoom</div>
+    </div>
+    <div class="pin-wrap">
+      <svg class="pin" width="56" height="56" viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="24" fill="#FF5A4E" stroke="#fff" stroke-width="3"/>
+        <text x="28" y="34" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="16" fill="#fff">12</text>
+      </svg>
+      <div class="lbl">Cluster</div>
+      <div class="tok">12+ pins · count badge</div>
+    </div>
+  </div>
+</div>
+</body></html>

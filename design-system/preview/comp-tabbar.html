@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Tab Bar</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  body { background: linear-gradient(180deg, #1F232C 0%, #0E1116 100%); padding:0; }
+  .card { background: transparent; padding:18px; }
+  .tab {
+    width:100%; max-width:380px; margin:0 auto;
+    display:grid; grid-template-columns: repeat(4, 1fr);
+    background: rgba(22, 25, 31, 0.86);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:24px; padding:8px; gap:4px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.4);
+  }
+  .ti { display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 0; border-radius:16px; color:#8A93A4; text-decoration:none; }
+  .ti.active { background: rgba(255, 90, 78, 0.14); color:#FF5A4E; }
+  .ti .lbl { font:700 10px var(--font-sans); letter-spacing:.02em; }
+  .ti svg { display:block; }
+</style></head>
+<body>
+<div class="card">
+  <nav class="tab" aria-label="Tab bar">
+    <a class="ti active">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>
+      <span class="lbl">Карта</span>
+    </a>
+    <a class="ti">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5" fill="currentColor"/></svg>
+      <span class="lbl">Запись</span>
+    </a>
+    <a class="ti">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+      <span class="lbl">События</span>
+    </a>
+    <a class="ti">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+      <span class="lbl">Профиль</span>
+    </a>
+  </nav>
+</div>
+</body></html>

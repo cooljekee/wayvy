@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Spacing scale</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .row2 { display:flex; align-items:flex-end; gap:14px; }
+  .col2 { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .bar { background:linear-gradient(180deg, var(--wv-coral-400), var(--wv-coral-500)); border-radius:4px; min-height:6px; width:100%; }
+  .lbl { font: 700 11px var(--font-sans); color: var(--fg); }
+  .tok { font: 500 10px var(--font-mono); color: var(--fg-3); }
+  .col2 { width:48px; }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Spacing scale · 8pt grid</div>
+  <div class="row2">
+    <div class="col2"><div class="bar" style="height:4px"></div><div class="lbl">1</div><div class="tok">4</div></div>
+    <div class="col2"><div class="bar" style="height:8px"></div><div class="lbl">2</div><div class="tok">8</div></div>
+    <div class="col2"><div class="bar" style="height:12px"></div><div class="lbl">3</div><div class="tok">12</div></div>
+    <div class="col2"><div class="bar" style="height:16px"></div><div class="lbl">4</div><div class="tok">16</div></div>
+    <div class="col2"><div class="bar" style="height:20px"></div><div class="lbl">5</div><div class="tok">20</div></div>
+    <div class="col2"><div class="bar" style="height:24px"></div><div class="lbl">6</div><div class="tok">24</div></div>
+    <div class="col2"><div class="bar" style="height:32px"></div><div class="lbl">8</div><div class="tok">32</div></div>
+    <div class="col2"><div class="bar" style="height:40px"></div><div class="lbl">10</div><div class="tok">40</div></div>
+    <div class="col2"><div class="bar" style="height:48px"></div><div class="lbl">12</div><div class="tok">48</div></div>
+    <div class="col2"><div class="bar" style="height:64px"></div><div class="lbl">16</div><div class="tok">64</div></div>
+  </div>
+  <div class="wv-secondary" style="font-size:12px">Token name → pixel value. 4 and 12 are the only off-grid units, kept for hairline alignment and dense lists.</div>
+</div>
+</body></html>

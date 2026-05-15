@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Coral Scale</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .scale { display:grid; grid-template-columns: repeat(8, 1fr); gap:8px; }
+  .step  { display:flex; flex-direction:column; gap:4px; }
+  .step .chip { height:64px; border-radius:10px; border:1px solid var(--border); }
+  .step .name { font: 600 11px var(--font-sans); color: var(--fg-2); }
+  .step .hex  { font: 500 10px var(--font-mono); color: var(--fg-3); }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Coral — primary, own routes</div>
+  <div class="scale">
+    <div class="step"><div class="chip" style="background:#FFF1EE"></div><div class="name">50</div><div class="hex">#FFF1EE</div></div>
+    <div class="step"><div class="chip" style="background:#FFD9D2"></div><div class="name">100</div><div class="hex">#FFD9D2</div></div>
+    <div class="step"><div class="chip" style="background:#FFB1A4"></div><div class="name">200</div><div class="hex">#FFB1A4</div></div>
+    <div class="step"><div class="chip" style="background:#FF8876"></div><div class="name">300</div><div class="hex">#FF8876</div></div>
+    <div class="step"><div class="chip" style="background:#FF6F58"></div><div class="name">400</div><div class="hex">#FF6F58</div></div>
+    <div class="step"><div class="chip" style="background:#FF5A4E; outline:2px solid var(--fg); outline-offset:2px"></div><div class="name">500 ★</div><div class="hex">#FF5A4E</div></div>
+    <div class="step"><div class="chip" style="background:#E84436"></div><div class="name">600</div><div class="hex">#E84436</div></div>
+    <div class="step"><div class="chip" style="background:#C2331F"></div><div class="name">700</div><div class="hex">#C2331F</div></div>
+  </div>
+</div>
+</body></html>

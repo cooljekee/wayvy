@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Surfaces — Light & Dark</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .duo { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .panel { padding:18px; border-radius:14px; }
+  .stack { display:flex; flex-direction:column; gap:8px; }
+  .stack > div { padding:10px 12px; border-radius:8px; font: 600 12px var(--font-sans); }
+  .light { background:#F4F6FA; color:#0E1116; border:1px solid rgba(14,17,22,.08); }
+  .light .s1 { background:#FFFFFF; border:1px solid rgba(14,17,22,.08); }
+  .light .s2 { background:#F8FAFC; border:1px solid rgba(14,17,22,.06); }
+  .light .s3 { background:#EDF0F5; }
+  .light .ov { background:rgba(255,255,255,.78); backdrop-filter:blur(8px); border:1px solid rgba(14,17,22,.08); color:#0E1116;}
+  .dark { background:#0B0D11; color:#F4F6FA; }
+  .dark .s1 { background:#16191F; border:1px solid rgba(255,255,255,.08); }
+  .dark .s2 { background:#1F232C; }
+  .dark .s3 { background:#2A2F3A; }
+  .dark .ov { background:rgba(22,25,31,.78); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.10); }
+  .tok { font-family:var(--font-mono); font-size:10px; opacity:.6; float:right; font-weight:400; }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Surfaces — light / dark</div>
+  <div class="duo">
+    <div class="panel light">
+      <div class="stack">
+        <div class="s1">surface <span class="tok">#FFFFFF</span></div>
+        <div class="s2">surface-2 <span class="tok">#F8FAFC</span></div>
+        <div class="s3">surface-3 <span class="tok">#EDF0F5</span></div>
+        <div class="ov">overlay · blur 8 <span class="tok">rgba(255,255,255,.78)</span></div>
+      </div>
+    </div>
+    <div class="panel dark">
+      <div class="stack">
+        <div class="s1">surface <span class="tok">#16191F</span></div>
+        <div class="s2">surface-2 <span class="tok">#1F232C</span></div>
+        <div class="s3">surface-3 <span class="tok">#2A2F3A</span></div>
+        <div class="ov">overlay · blur 8 <span class="tok">rgba(22,25,31,.78)</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Recording HUD</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  body { background:
+    radial-gradient(circle at 20% 30%, #2A2F3A 0 1px, transparent 1.5px),
+    radial-gradient(circle at 75% 65%, #2A2F3A 0 1px, transparent 1.5px),
+    linear-gradient(180deg, #16191F 0%, #0E1116 100%);
+    padding:0;
+  }
+  .card { background:transparent; padding:18px; display:flex; align-items:flex-end; justify-content:center; min-height:auto; }
+  .hud {
+    width: 100%;
+    max-width: 540px;
+    background: rgba(22, 25, 31, 0.78);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 24px;
+    padding: 14px 16px;
+    color: #F4F6FA;
+    display:flex; align-items:center; gap:14px;
+    box-shadow: 0 16px 36px rgba(0,0,0,.45);
+  }
+  .rec { display:flex; align-items:center; gap:8px; padding:6px 10px 6px 8px; background:rgba(255,90,78,.18); border-radius:999px;}
+  .rec .dot { width:8px; height:8px; border-radius:999px; background:#FF5A4E; box-shadow: 0 0 0 0 rgba(255,90,78,.6); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,90,78,.6); } 50% { box-shadow: 0 0 0 6px rgba(255,90,78,0); } }
+  .rec span { font:700 11px var(--font-sans); color:#FFD9D2; letter-spacing:.06em; text-transform:uppercase; }
+  .metrics { display:flex; gap:18px; align-items:baseline; }
+  .m .val { font:700 22px var(--font-display); color:#F4F6FA; line-height:1; font-variant-numeric: tabular-nums; letter-spacing:-0.02em; }
+  .m .lab { font:600 10px var(--font-sans); color:#8A93A4; letter-spacing:.06em; text-transform:uppercase; }
+  .spacer { flex:1; }
+  .iconbtn { width:42px; height:42px; border-radius:14px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.10); display:flex; align-items:center; justify-content:center; color:#F4F6FA; cursor:pointer; }
+  .stop { width:46px; height:46px; border-radius:16px; background:#FF5A4E; display:flex; align-items:center; justify-content:center; color:#fff; box-shadow: 0 4px 14px rgba(255,90,78,.45); cursor:pointer; }
+</style></head>
+<body>
+<div class="card">
+  <div class="hud">
+    <div class="rec"><div class="dot"></div><span>Запись</span></div>
+    <div class="metrics">
+      <div class="m"><div class="val">1,24</div><div class="lab">км</div></div>
+      <div class="m"><div class="val">18:42</div><div class="lab">время</div></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="iconbtn" aria-label="add waypoint">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <button class="stop" aria-label="stop">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+    </button>
+  </div>
+</div>
+</body></html>
