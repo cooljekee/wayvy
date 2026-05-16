@@ -28,7 +28,7 @@ struct ContentView: View {
                     .tag(AppState.Tab.subscriptions)
                     .tabItem { Label("Карта·все", systemImage: "person.2") }
 
-                tab("События")
+                EventsView()
                     .tag(AppState.Tab.events)
                     .tabItem { Label("События", systemImage: "calendar") }
 
