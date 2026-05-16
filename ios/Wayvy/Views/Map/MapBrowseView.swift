@@ -5,13 +5,21 @@ struct MapBrowseView: View {
     @Environment(AppState.self) private var appState
     @State private var userLocation: CLLocationCoordinate2D?
     @State private var showSearch = false
+    @State private var pendingLongPress: CLLocationCoordinate2D?
+    @State private var showWaypointSheet = false
+    @State private var standaloneWaypoints: [WaypointPin] = []
 
     var body: some View {
         ZStack {
             YandexMapView(
                 userLocation: userLocation,
                 ownPolylines: [],
-                followPolylines: []
+                followPolylines: [],
+                waypoints: standaloneWaypoints,
+                onLongPress: { coord in
+                    pendingLongPress = coord
+                    showWaypointSheet = true
+                }
             )
             .ignoresSafeArea()
 
@@ -37,8 +45,23 @@ struct MapBrowseView: View {
                 Spacer()
             }
         }
+        .sheet(isPresented: $showWaypointSheet) {
+            if let coord = pendingLongPress {
+                WaypointSheetView(
+                    mode: .standalone(coordinate: coord),
+                    onSaved: { pin in
+                        standaloneWaypoints.append(pin)
+                        showWaypointSheet = false
+                    },
+                    onCancel: { showWaypointSheet = false }
+                )
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(.radius28)
+            }
+        }
         .sheet(isPresented: $showSearch) {
-            // SearchOverlay — Phase 4
+            // SearchOverlay — Phase 4 stub
             VStack(spacing: .sp4) {
                 Text("Поиск")
                     .font(.wvH3)

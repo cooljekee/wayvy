@@ -9,6 +9,12 @@ final class RecordingModel {
     var currentLocation: CLLocationCoordinate2D?
     var elapsedSeconds: Int = 0
     var startedAt: Date?
+    private(set) var waypoints: [WaypointPin] = []
+
+    // Stable ID for this recording session — passed as routeID to inline waypoints.
+    // The actual route is created on Stop; the ID links waypoints to it retroactively
+    // once route pre-creation is supported by the backend.
+    let pendingRouteID: UUID = UUID()
 
     private var timerTask: Task<Void, Never>?
     private var locationTask: Task<Void, Never>?
@@ -52,6 +58,18 @@ final class RecordingModel {
         }
     }
 
+    func addWaypoint(_ pin: WaypointPin) {
+        // Update step numbers for route-linked waypoints
+        var updated = waypoints
+        updated.append(pin)
+        waypoints = updated.enumerated().map { index, p in
+            if case .routeLinked = p.kind {
+                return WaypointPin(id: p.id, coordinate: p.coordinate, kind: .routeLinked(stepNumber: index + 1))
+            }
+            return p
+        }
+    }
+
     func stopAndCollect() async -> [CLLocationCoordinate2D] {
         timerTask?.cancel()
         locationTask?.cancel()
@@ -67,20 +85,22 @@ struct RecordingView: View {
     @Environment(AppState.self) private var appState
     @State private var model = RecordingModel()
     @State private var showStopSheet = false
+    @State private var showWaypointSheet = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
             YandexMapView(
                 userLocation: model.currentLocation,
                 ownPolylines: model.track.isEmpty ? [] : [model.track],
-                followPolylines: []
+                followPolylines: [],
+                waypoints: model.waypoints
             )
             .ignoresSafeArea()
 
             RecordingHUDView(
                 distance: model.distanceString,
                 time: model.timeString,
-                onAddPoint: {},
+                onAddPoint: { showWaypointSheet = true },
                 onStop: { showStopSheet = true }
             )
             .padding(.horizontal, .sp4)
@@ -89,6 +109,19 @@ struct RecordingView: View {
         .onAppear {
             appState.isRecording = true
             model.start()
+        }
+        .sheet(isPresented: $showWaypointSheet) {
+            WaypointSheetView(
+                mode: .inline(routeID: model.pendingRouteID),
+                onSaved: { pin in
+                    model.addWaypoint(pin)
+                    showWaypointSheet = false
+                },
+                onCancel: { showWaypointSheet = false }
+            )
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(.radius28)
         }
         .sheet(isPresented: $showStopSheet) {
             StopConfirmSheet(
