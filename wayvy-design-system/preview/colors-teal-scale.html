@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Teal Scale</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .scale { display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; }
+  .step  { display:flex; flex-direction:column; gap:4px; }
+  .step .chip { height:64px; border-radius:10px; border:1px solid var(--border); }
+  .step .name { font: 600 11px var(--font-sans); color: var(--fg-2); }
+  .step .hex  { font: 500 10px var(--font-mono); color: var(--fg-3); }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Teal — followed users' routes</div>
+  <div class="scale">
+    <div class="step"><div class="chip" style="background:#E6F8FA"></div><div class="name">50</div><div class="hex">#E6F8FA</div></div>
+    <div class="step"><div class="chip" style="background:#B9ECF0"></div><div class="name">100</div><div class="hex">#B9ECF0</div></div>
+    <div class="step"><div class="chip" style="background:#7ADBE2"></div><div class="name">200</div><div class="hex">#7ADBE2</div></div>
+    <div class="step"><div class="chip" style="background:#3FC6D2"></div><div class="name">300</div><div class="hex">#3FC6D2</div></div>
+    <div class="step"><div class="chip" style="background:#14B8C7; outline:2px solid var(--fg); outline-offset:2px"></div><div class="name">400 ★</div><div class="hex">#14B8C7</div></div>
+    <div class="step"><div class="chip" style="background:#0A9CA9"></div><div class="name">500</div><div class="hex">#0A9CA9</div></div>
+    <div class="step"><div class="chip" style="background:#0A7F8A"></div><div class="name">600</div><div class="hex">#0A7F8A</div></div>
+  </div>
+</div>
+</body></html>

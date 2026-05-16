@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Bottom Sheet</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  body { background:
+    radial-gradient(circle at 30% 25%, #DDE2EA 0 1px, transparent 1.5px),
+    radial-gradient(circle at 70% 60%, #DDE2EA 0 1px, transparent 1.5px),
+    linear-gradient(180deg, #ECEEF2 0%, #E2E6EC 100%);
+    padding:0;
+  }
+  .card { background:transparent; padding:0; min-height: 100vh; display:flex; align-items:flex-end; }
+  .sheet {
+    width:100%;
+    background:#FFFFFF;
+    border-top-left-radius:28px;
+    border-top-right-radius:28px;
+    padding:8px 20px 18px;
+    box-shadow: 0 -8px 32px rgba(14,17,22,.10);
+  }
+  .grip { width:36px; height:5px; border-radius:999px; background:rgba(14,17,22,.18); margin:6px auto 14px; }
+  .sheet h3 { font:700 20px var(--font-display); margin:0 0 4px; letter-spacing:-0.01em; }
+  .addr { font:500 13px var(--font-sans); color:var(--fg-3); margin-bottom:14px; display:flex; align-items:center; gap:6px; }
+  .photos { display:flex; gap:8px; margin-bottom:14px; }
+  .ph { width:64px; height:64px; border-radius:12px; background:var(--surface-3); border:1px dashed var(--border-strong); display:flex; align-items:center; justify-content:center; color:var(--fg-3); flex-shrink:0; }
+  .ph.has { background: linear-gradient(135deg,#FFB1A4 0%, #FF5A4E 100%); border:none; }
+  .ph.has2 { background: linear-gradient(135deg,#7ADBE2 0%, #14B8C7 100%); border:none; }
+  .field { margin-bottom:10px; }
+  .field-label { font:600 11px var(--font-sans); color:var(--fg-3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+  .input { font:500 15px var(--font-sans); width:100%; padding:11px 14px; box-sizing:border-box; border:1px solid var(--border-strong); border-radius:12px; background:var(--surface); }
+  .actions { display:flex; gap:10px; margin-top:14px; }
+  .btn { flex:1; padding:13px; border-radius:14px; font:700 15px var(--font-sans); border:none; cursor:pointer; }
+  .btn.primary { background:var(--wv-coral-500); color:#fff; box-shadow: 0 4px 12px rgba(255,90,78,.28); }
+  .btn.ghost { background:var(--surface-3); color:var(--fg); }
+</style></head>
+<body>
+<div class="card">
+  <div class="sheet">
+    <div class="grip"></div>
+    <h3>Новая точка</h3>
+    <div class="addr">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Покровка, 27 · Москва
+    </div>
+    <div class="photos">
+      <div class="ph has"></div>
+      <div class="ph has2"></div>
+      <div class="ph">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Название</div>
+      <input class="input" value="Самокатная кофейня"/>
+    </div>
+    <div class="actions">
+      <button class="btn ghost">Отмена</button>
+      <button class="btn primary">Добавить точку</button>
+    </div>
+  </div>
+</div>
+</body></html>

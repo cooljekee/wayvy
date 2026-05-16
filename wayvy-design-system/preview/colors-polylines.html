@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Route Polylines</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .duo { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .tile { border-radius:14px; overflow:hidden; position:relative; height:170px; }
+  .light { background:
+      radial-gradient(circle at 30% 40%, #DDE2EA 0 1px, transparent 1.5px),
+      radial-gradient(circle at 70% 70%, #DDE2EA 0 1px, transparent 1.5px),
+      linear-gradient(180deg, #ECEEF2 0%, #E2E6EC 100%);
+  }
+  .dark { background:
+      radial-gradient(circle at 30% 40%, #2A2F3A 0 1px, transparent 1.5px),
+      radial-gradient(circle at 70% 70%, #2A2F3A 0 1px, transparent 1.5px),
+      linear-gradient(180deg, #1A1D24 0%, #14171D 100%);
+  }
+  .label { position:absolute; top:10px; left:12px; font: 700 10px var(--font-sans); letter-spacing:.06em; text-transform:uppercase; }
+  .light .label { color:#3A4150; }
+  .dark  .label { color:#C5CBD6; }
+  .legend { display:flex; gap:14px; padding:10px 12px; }
+  .leg { display:flex; align-items:center; gap:8px; font:600 12px var(--font-sans); color:var(--fg-2); }
+  .leg .line { width:28px; height:4px; border-radius:2px; }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Map polylines — own vs followed</div>
+  <div class="duo">
+    <div class="tile light">
+      <div class="label">Light tiles</div>
+      <svg viewBox="0 0 350 170" width="100%" height="100%">
+        <path d="M20,140 C70,90 100,120 150,80 S240,110 330,40" fill="none" stroke="rgba(20,184,199,.28)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M20,140 C70,90 100,120 150,80 S240,110 330,40" fill="none" stroke="#14B8C7" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M10,40 C80,60 120,30 200,90 S290,150 340,120" fill="none" stroke="rgba(255,90,78,.28)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M10,40 C80,60 120,30 200,90 S290,150 340,120" fill="none" stroke="#FF5A4E" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="tile dark">
+      <div class="label">Dark tiles</div>
+      <svg viewBox="0 0 350 170" width="100%" height="100%">
+        <path d="M20,140 C70,90 100,120 150,80 S240,110 330,40" fill="none" stroke="rgba(20,184,199,.32)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M20,140 C70,90 100,120 150,80 S240,110 330,40" fill="none" stroke="#3FC6D2" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M10,40 C80,60 120,30 200,90 S290,150 340,120" fill="none" stroke="rgba(255,90,78,.32)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M10,40 C80,60 120,30 200,90 S290,150 340,120" fill="none" stroke="#FF6F58" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="leg"><span class="line" style="background:#FF5A4E"></span>Own route · 4pt</div>
+    <div class="leg"><span class="line" style="background:#14B8C7"></span>Followed · 3.5pt</div>
+    <div class="leg" style="color:var(--fg-3)">Soft glow underneath for elevation</div>
+  </div>
+</div>
+</body></html>

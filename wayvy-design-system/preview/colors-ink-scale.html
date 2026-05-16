@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Ink Scale</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .scale { display:grid; grid-template-columns: repeat(11, 1fr); gap:6px; }
+  .step  { display:flex; flex-direction:column; gap:3px; align-items:flex-start; }
+  .step .chip { height:60px; width:100%; border-radius:8px; border:1px solid var(--border); }
+  .step .name { font: 600 10px var(--font-sans); color: var(--fg-2); }
+  .step .hex  { font: 500 9px var(--font-mono); color: var(--fg-3); }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Ink — warm urban neutrals</div>
+  <div class="scale">
+    <div class="step"><div class="chip" style="background:#0E1116"></div><div class="name">900</div><div class="hex">0E1116</div></div>
+    <div class="step"><div class="chip" style="background:#16191F"></div><div class="name">800</div><div class="hex">16191F</div></div>
+    <div class="step"><div class="chip" style="background:#1F232C"></div><div class="name">700</div><div class="hex">1F232C</div></div>
+    <div class="step"><div class="chip" style="background:#2A2F3A"></div><div class="name">600</div><div class="hex">2A2F3A</div></div>
+    <div class="step"><div class="chip" style="background:#3A4150"></div><div class="name">500</div><div class="hex">3A4150</div></div>
+    <div class="step"><div class="chip" style="background:#5B6577"></div><div class="name">400</div><div class="hex">5B6577</div></div>
+    <div class="step"><div class="chip" style="background:#8A93A4"></div><div class="name">300</div><div class="hex">8A93A4</div></div>
+    <div class="step"><div class="chip" style="background:#C5CBD6"></div><div class="name">200</div><div class="hex">C5CBD6</div></div>
+    <div class="step"><div class="chip" style="background:#E7EAF0"></div><div class="name">100</div><div class="hex">E7EAF0</div></div>
+    <div class="step"><div class="chip" style="background:#F4F6FA"></div><div class="name">50</div><div class="hex">F4F6FA</div></div>
+    <div class="step"><div class="chip" style="background:#FFFFFF"></div><div class="name">0</div><div class="hex">FFFFFF</div></div>
+  </div>
+  <div class="wv-secondary" style="font-size:12px">Slightly cool ink — urban, not corporate. Off-black floor (#0E1116) avoids pure-black harshness.</div>
+</div>
+</body></html>

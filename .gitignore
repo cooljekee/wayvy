@@ -28,3 +28,14 @@ backend/**/*.test
 
 # macOS
 .DS_Store
+
+# iOS secrets
+ios/Wayvy/Config/Config.xcconfig
+ios/Wayvy/Config/Config.debug.xcconfig
+
+# Xcode
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+ios/DerivedData/
+ios/.build/

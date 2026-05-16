@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Route Card</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  body { background: var(--bg); }
+  .card { padding:18px; }
+  .rcard { background:var(--surface); border-radius:20px; overflow:hidden; box-shadow: var(--shadow-2); border:1px solid var(--border); display:grid; grid-template-columns: 168px 1fr; }
+  .preview { background:
+    radial-gradient(circle at 30% 40%, #DDE2EA 0 1px, transparent 1.5px),
+    radial-gradient(circle at 70% 70%, #DDE2EA 0 1px, transparent 1.5px),
+    linear-gradient(180deg, #ECEEF2 0%, #E2E6EC 100%);
+    position:relative;
+  }
+  .preview svg { width:100%; height:100%; display:block; }
+  .vis { position:absolute; top:10px; left:10px; padding:3px 8px; border-radius:999px; background:rgba(45,191,107,.92); color:#fff; font:700 10px var(--font-sans); display:inline-flex; align-items:center; gap:4px; }
+  .body { padding:14px 16px; display:flex; flex-direction:column; gap:8px; }
+  .author { display:flex; align-items:center; gap:8px; }
+  .avatar { width:24px; height:24px; border-radius:999px; background:linear-gradient(135deg,#FFB1A4,#FF5A4E); }
+  .name { font:600 13px var(--font-sans); color:var(--fg); }
+  .meta-row { display:flex; gap:14px; }
+  .metric { display:flex; flex-direction:column; gap:1px; }
+  .mval { font:700 18px var(--font-display); color:var(--fg); font-variant-numeric:tabular-nums; }
+  .mlab { font:600 10px var(--font-sans); color:var(--fg-3); letter-spacing:.05em; text-transform:uppercase; }
+  .title { font:700 16px var(--font-display); color:var(--fg); }
+  .sub { font:500 12px var(--font-sans); color:var(--fg-3); }
+</style></head>
+<body>
+<div class="card">
+  <div class="rcard">
+    <div class="preview">
+      <span class="vis">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="9"/></svg>
+        Публичный
+      </span>
+      <svg viewBox="0 0 168 168">
+        <path d="M10,140 C40,80 80,110 110,60 S150,40 158,30" fill="none" stroke="rgba(255,90,78,.28)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M10,140 C40,80 80,110 110,60 S150,40 158,30" fill="none" stroke="#FF5A4E" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="10" cy="140" r="5" fill="#FF5A4E" stroke="#fff" stroke-width="2"/>
+        <circle cx="158" cy="30" r="5" fill="#1F232C" stroke="#fff" stroke-width="2"/>
+        <circle cx="78" cy="86" r="4" fill="#F4B740" stroke="#fff" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="body">
+      <div class="author"><div class="avatar"></div><div class="name">Аня · 2 часа назад</div></div>
+      <div class="title">Покровка → Чистые пруды</div>
+      <div class="sub">Москва · 3 waypoints</div>
+      <div class="meta-row" style="margin-top:auto">
+        <div class="metric"><div class="mval">3,4</div><div class="mlab">км</div></div>
+        <div class="metric"><div class="mval">42:18</div><div class="mlab">время</div></div>
+        <div class="metric"><div class="mval">4,9</div><div class="mlab">км/ч</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Wayvy logo</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .card {
+    display: flex;
+    align-items: stretch;
+    gap: 24px;
+    padding: 20px;
+  }
+  .stage {
+    background: linear-gradient(180deg, #B9ECF0 0%, #FFE7BA 100%);
+    padding: 36px 44px;
+    border-radius: 22px;
+    box-shadow: var(--shadow-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 280px;
+  }
+  /* lockup: mark + wordmark, sized via a single CSS var */
+  .lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--lockup-h) * 0.32);
+  }
+  .lockup__mark {
+    height: var(--lockup-h);
+    width: calc(var(--lockup-h) * 1.69); /* viewBox aspect 824:488 */
+    display: block;
+  }
+  .lockup__word {
+    font: 800 calc(var(--lockup-h) * 1.18) var(--font-display);
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+  .lockup--hero  { --lockup-h: 56px; }
+  .lockup--md    { --lockup-h: 28px; }
+  .lockup--sm    { --lockup-h: 18px; }
+
+  .variants {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .variant {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+  }
+  .variant__cap {
+    margin-left: auto;
+    font: 500 10px var(--font-mono);
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+  }
+  .v-light  { background: #F4F6FA; }
+  .v-light  .lockup__word { color: #0E1116; }
+  .v-dark   { background: #0E1116; border-color: rgba(255,255,255,.08); }
+  .v-dark   .lockup__word { color: #FFFFFF; }
+  .v-dark   .variant__cap { color: #8A93A4; }
+  .v-coral  { background: var(--wv-coral-500); border-color: transparent; }
+  .v-coral  .lockup__word { color: #FFFFFF; }
+  .v-coral  .variant__cap { color: rgba(255,255,255,.72); }
+</style></head>
+<body>
+<div class="card card--surface">
+
+  <!-- HERO -->
+  <div class="stage">
+    <div class="lockup lockup--hero">
+      <img class="lockup__mark" src="../assets/wayvy-mark-white.svg" alt=""/>
+      <span class="lockup__word" style="color:#FFFFFF">wayvy</span>
+    </div>
+  </div>
+
+  <!-- USAGE VARIANTS -->
+  <div class="variants">
+
+    <div class="variant v-light">
+      <div class="lockup lockup--md">
+        <img class="lockup__mark" src="../assets/wayvy-mark.svg" alt=""/>
+        <span class="lockup__word">wayvy</span>
+      </div>
+      <span class="variant__cap">on light · coral mark</span>
+    </div>
+
+    <div class="variant v-dark">
+      <div class="lockup lockup--md">
+        <img class="lockup__mark" src="../assets/wayvy-mark.svg" alt=""/>
+        <span class="lockup__word">wayvy</span>
+      </div>
+      <span class="variant__cap">on dark · coral mark</span>
+    </div>
+
+    <div class="variant v-coral">
+      <div class="lockup lockup--md">
+        <img class="lockup__mark" src="../assets/wayvy-mark-white.svg" alt=""/>
+        <span class="lockup__word">wayvy</span>
+      </div>
+      <span class="variant__cap">on coral · white mark</span>
+    </div>
+
+    <div class="variant v-light" style="justify-content:flex-start; gap:24px">
+      <div class="lockup lockup--sm">
+        <img class="lockup__mark" src="../assets/wayvy-mark.svg" alt=""/>
+        <span class="lockup__word">wayvy</span>
+      </div>
+      <img src="../assets/wayvy-mark.svg" alt="" style="height:18px; width:auto"/>
+      <img src="../assets/wayvy-app-icon.svg" alt="" style="width:22px; height:22px; border-radius:5px;"/>
+      <span class="variant__cap">min sizes</span>
+    </div>
+
+  </div>
+</div>
+</body></html>

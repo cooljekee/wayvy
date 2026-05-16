@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Follow Button</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .userline { display:flex; align-items:center; gap:10px; padding:8px 4px; }
+  .avatar { width:38px; height:38px; border-radius:999px; flex-shrink:0; }
+  .name { font:700 14px var(--font-sans); color:var(--fg); }
+  .handle { font:500 12px var(--font-sans); color:var(--fg-3); }
+  .grow { flex:1; }
+  .fbtn { font:700 13px var(--font-sans); padding:8px 16px; border-radius:999px; border:1.5px solid transparent; cursor:pointer; transition: all 140ms cubic-bezier(.16,1,.3,1); }
+  .f-default { background:var(--wv-ink-900); color:var(--wv-white); border-color:var(--wv-ink-900); }
+  .f-following { background:var(--surface); color:var(--fg); border-color:var(--border-strong); }
+  .f-requested { background:var(--surface-3); color:var(--fg-3); border-color:transparent; }
+  .f-back { background:var(--accent-soft); color:var(--wv-coral-700); border-color:transparent; }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Follow button — states</div>
+  <div class="userline">
+    <div class="avatar" style="background:linear-gradient(135deg,#FFB1A4,#FF5A4E)"></div>
+    <div class="col" style="gap:1px"><span class="name">Аня Соколова</span><span class="handle">@anya · 42 маршрута</span></div>
+    <div class="grow"></div>
+    <button class="fbtn f-default">Подписаться</button>
+  </div>
+  <div class="userline">
+    <div class="avatar" style="background:linear-gradient(135deg,#7ADBE2,#14B8C7)"></div>
+    <div class="col" style="gap:1px"><span class="name">Дима К.</span><span class="handle">@dima_k · Москва</span></div>
+    <div class="grow"></div>
+    <button class="fbtn f-following">Подписан ✓</button>
+  </div>
+  <div class="userline">
+    <div class="avatar" style="background:linear-gradient(135deg,#FCE3A8,#F4B740)"></div>
+    <div class="col" style="gap:1px"><span class="name">Лиза Бар</span><span class="handle">@liza · приватный профиль</span></div>
+    <div class="grow"></div>
+    <button class="fbtn f-requested">Запрошено</button>
+  </div>
+  <div class="userline">
+    <div class="avatar" style="background:linear-gradient(135deg,#B9ECF0,#0A9CA9)"></div>
+    <div class="col" style="gap:1px"><span class="name">Костя</span><span class="handle">@kostya · подписан на тебя</span></div>
+    <div class="grow"></div>
+    <button class="fbtn f-back">Подписаться в ответ</button>
+  </div>
+</div>
+</body></html>

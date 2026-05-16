@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Friend route walk-through</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  body { background: var(--bg); padding: 0; }
+  .card { padding: 14px; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .stage { background:#0E1116; border-radius:18px; padding:14px 12px; color:#F4F6FA; display:flex; flex-direction:column; gap:10px; min-height:220px; }
+  .chip { display:inline-flex; align-items:center; gap:8px; padding:5px 12px 5px 5px; border-radius:999px; background:rgba(255,255,255,.08); width:fit-content; }
+  .av { width:22px; height:22px; border-radius:999px; background:linear-gradient(135deg,#FFB1A4,#FF5A4E); }
+  .chip .nm { font:700 11px var(--font-sans); color:#F4F6FA; }
+  .photo { border-radius:12px; height:90px; width:100%; }
+  .photo-1 { background: linear-gradient(135deg, #FFB1A4 0%, #FF5A4E 60%, #C2331F 100%); }
+  .photo-3 { background: linear-gradient(155deg, #B9ECF0 0%, #14B8C7 55%, #0A7F8A 100%); }
+  .photo-4 { background: linear-gradient(180deg, #2A2F3A 0%, #5B6577 50%, #FF8876 100%); }
+  .dots { display:flex; gap:4px; align-items:center; }
+  .dots .d { width:6px; height:6px; border-radius:999px; background: rgba(255,255,255,.16); }
+  .dots .d.on { background:#FF5A4E; width:18px; }
+  .ttl { font:700 14px var(--font-display); letter-spacing:-0.01em; }
+  .meta { font:500 11px var(--font-sans); color:#8A93A4; }
+  .cta-pill { font:700 11px var(--font-sans); color:#fff; background:#FF5A4E; padding:6px 10px; border-radius:8px; text-align:center; width:fit-content; align-self:center; }
+  .lbl { font:500 10px var(--font-mono); color:var(--fg-3); margin-top:6px; text-align:center; }
+</style></head>
+<body>
+<div class="card card--surface">
+  <div class="grid">
+    <div>
+      <div class="stage">
+        <div class="chip"><div class="av"></div><div class="nm">Аня</div></div>
+        <div class="photo photo-1"></div>
+        <div class="dots"><span class="d on"></span><span class="d"></span><span class="d"></span><span class="d"></span></div>
+        <div class="ttl">Самокатная кофейня</div>
+        <div class="meta">Точка 1 из 4 · Кофейня</div>
+        <div class="cta-pill">Пройти маршрут</div>
+      </div>
+      <div class="lbl">1 — старт</div>
+    </div>
+    <div>
+      <div class="stage">
+        <div class="chip"><div class="av"></div><div class="nm">Аня</div></div>
+        <div class="photo photo-3"></div>
+        <div class="dots"><span class="d on" style="background:#14B8C7;width:6px"></span><span class="d on" style="background:#14B8C7;width:6px"></span><span class="d on"></span><span class="d"></span></div>
+        <div class="ttl">Бар «Чайка»</div>
+        <div class="meta">Точка 3 из 4 · Бар</div>
+        <div class="cta-pill">Пройти маршрут</div>
+      </div>
+      <div class="lbl">3 — текущая</div>
+    </div>
+    <div>
+      <div class="stage">
+        <div class="chip"><div class="av"></div><div class="nm">Аня</div></div>
+        <div class="photo photo-4"></div>
+        <div class="dots"><span class="d on" style="background:#14B8C7;width:6px"></span><span class="d on" style="background:#14B8C7;width:6px"></span><span class="d on" style="background:#14B8C7;width:6px"></span><span class="d on"></span></div>
+        <div class="ttl">Готово</div>
+        <div class="meta">3,4 км · 4 точки</div>
+        <div class="cta-pill">Пройти этот маршрут</div>
+      </div>
+      <div class="lbl">4 — финиш</div>
+    </div>
+  </div>
+</div>
+</body></html>

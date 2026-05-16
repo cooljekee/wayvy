@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Wayvy iOS — UI kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css"/>
+<style>
+  html, body {
+    margin: 0;
+    background: radial-gradient(ellipse at top, #1F232C 0%, #0B0D11 60%, #050608 100%);
+    min-height: 100vh;
+    font-family: var(--font-sans);
+  }
+  body {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 40px 20px 60px; gap: 22px;
+  }
+  .header {
+    text-align: center; color: #F4F6FA; max-width: 600px;
+  }
+  .header h1 {
+    font-family: var(--font-display);
+    font-weight: 800; font-size: 36px; letter-spacing: -0.02em; margin: 0;
+  }
+  .header .sub {
+    font-family: var(--font-sans); font-size: 14px; color: #8A93A4;
+    margin: 8px 0 0;
+  }
+  .controls {
+    display: inline-flex; gap: 4px; padding: 4px;
+    background: rgba(22, 25, 31, 0.78);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+  }
+  .controls button {
+    font-family: var(--font-sans); font-weight: 700; font-size: 12px;
+    padding: 8px 14px; border: none; cursor: pointer;
+    border-radius: 999px; background: transparent; color: #8A93A4;
+    transition: all 140ms cubic-bezier(.16,1,.3,1);
+  }
+  .controls button:hover { color: #F4F6FA; }
+  .controls button[aria-pressed="true"] {
+    background: #FF5A4E; color: #fff;
+  }
+  .controls .divider {
+    width: 1px; align-self: stretch; background: rgba(255,255,255,.08); margin: 0 2px;
+  }
+  /* Animations consumed by app components */
+  @keyframes wv-pin-pulse  { 0%{transform:scale(1);opacity:.45} 70%,100%{transform:scale(2.6);opacity:0} }
+  @keyframes wv-rec-pulse  { 0%,100%{box-shadow:0 0 0 0 rgba(255,90,78,.6)} 50%{box-shadow:0 0 0 6px rgba(255,90,78,0)} }
+  /* Sheet entry — opacity fade only, so headless captures show the settled state. */
+  @keyframes wv-sheet-up   { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes wv-fade-in    { from{opacity:0} to{opacity:1} }
+  @keyframes wv-toast      { 0%{opacity:0;transform:translate(-50%,-8px)} 15%,85%{opacity:1;transform:translate(-50%,0)} 100%{opacity:0;transform:translate(-50%,-4px)} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Wayvy iOS · UI kit</h1>
+  <p class="sub">Tap a state in the strip below. «Логин» — onboarding. «Стоп?» — confirm sheet. «Маршрут» — route detail. «◯ Пустой» — toggle empty states.</p>
+</div>
+
+<div class="controls" id="quicknav"></div>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="Map.jsx"></script>
+<script type="text/babel" src="Chrome.jsx"></script>
+<script type="text/babel" src="RecordingHUD.jsx"></script>
+<script type="text/babel" src="Cards.jsx"></script>
+<script type="text/babel" src="WaypointSheet.jsx"></script>
+<script type="text/babel" src="RouteDetailSheet.jsx"></script>
+<script type="text/babel" src="StopConfirmSheet.jsx"></script>
+<script type="text/babel" src="EmptyState.jsx"></script>
+<script type="text/babel" src="LoginScreen.jsx"></script>
+<script type="text/babel" src="FriendRouteSteps.jsx"></script>
+<script type="text/babel" src="SubscriptionsMap.jsx"></script>
+<script type="text/babel" src="WaypointDetailSheet.jsx"></script>
+<script type="text/babel" src="SearchOverlay.jsx"></script>
+<script type="text/babel" src="Profile.jsx"></script>
+<script type="text/babel" src="EventSheets.jsx"></script>
+<script type="text/babel" src="Screens.jsx"></script>
+
+<script type="text/babel">
+  // Inline App so it can expose tab state to the outer QuickNav.
+  function WayvyApp({ dark, externalTab, externalRecording, emptyMode }) {
+    const [tab, setTab] = React.useState('map');
+    const [filter, setFilter] = React.useState('all');
+    const [recording, setRecording] = React.useState(false);
+    const [paused, setPaused] = React.useState(false);
+    const [showWaypoint, setShowWaypoint] = React.useState(false);
+    const [showRouteDetail, setShowRouteDetail] = React.useState(false);
+    const [showStopConfirm, setShowStopConfirm] = React.useState(false);
+    const [showFriendSteps, setShowFriendSteps] = React.useState(false);
+    const [showSearch, setShowSearch] = React.useState(false);
+    const [showEventCreate, setShowEventCreate] = React.useState(false);
+    const [showEventDetail, setShowEventDetail] = React.useState(false);
+    const [showStandaloneWp, setShowStandaloneWp] = React.useState(null); // waypoint obj or null
+    const [standaloneCreate, setStandaloneCreate] = React.useState(false);
+    const [profileWho, setProfileWho] = React.useState('own');
+    const [toast, setToast] = React.useState(null);
+
+    // External nav from the controls strip above the device
+    React.useEffect(() => {
+      if (externalTab == null) return;
+      // Clear all sheets first; each branch sets exactly the ones it needs.
+      setShowWaypoint(false); setShowRouteDetail(false); setShowStopConfirm(false); setShowFriendSteps(false); setShowEventCreate(false); setShowEventDetail(false); setShowStandaloneWp(null); setStandaloneCreate(false);
+      if (externalTab === 'record')           { setRecording(true);  setTab('map'); }
+      else if (externalTab === 'routedetail') { setRecording(false); setTab('map'); setShowRouteDetail(true); }
+      else if (externalTab === 'stopconfirm') { setRecording(true);  setTab('map'); setShowStopConfirm(true); }
+      else if (externalTab === 'friendsteps') { setRecording(false); setTab('map'); setShowFriendSteps(true); }
+      else if (externalTab === 'mapall')      { setRecording(false); setTab('mapall'); }
+      else if (externalTab === 'waypoint')    { setRecording(true);  setTab('map'); setShowWaypoint(true); }
+      else if (externalTab === 'profileanya') { setRecording(false); setTab('profile'); setProfileWho('anya'); }
+      else if (externalTab === 'profile')     { setRecording(false); setTab('profile'); setProfileWho('own'); }
+      else if (externalTab === 'search')      { setRecording(false); setShowSearch(true); }
+      else if (externalTab === 'eventnew')    { setRecording(false); setTab('events'); setShowEventCreate(true); }
+      else if (externalTab === 'eventmap')    { setRecording(false); setTab('map'); setShowEventDetail(true); }
+      else if (externalTab === 'standalonewp') { setRecording(false); setTab('mapall'); setShowStandaloneWp(SAMPLE_STANDALONE); }
+      else if (externalTab === 'pointnew')    { setRecording(false); setTab('mapall'); setStandaloneCreate(true); setShowWaypoint(true); }
+      else                                    { setRecording(false); setTab(externalTab); }
+    }, [externalTab, externalRecording]);
+
+    const showToast = (msg) => {
+      setToast(msg);
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => setToast(null), 1800);
+    };
+    const goTab = (t) => {
+      if (t === 'record') { setRecording(true); setTab('map'); }
+      else { setRecording(false); setTab(t); }
+    };
+
+    return (
+      <div data-theme={dark ? 'dark' : 'light'} data-screen-label={recording ? 'recording' : tab}
+           style={{ position:'relative', width:'100%', height:'100%', background: dark ? '#0B0D11' : '#F4F6FA' }}>
+        {!recording && tab === 'map' && !showFriendSteps && (
+          <MapBrowseScreen dark={dark} filter={filter} setFilter={setFilter}
+            onStartRecording={() => setRecording(true)}
+            onTapPin={() => setShowRouteDetail(true)}
+            onTapSearch={() => setShowSearch(true)}
+            onTapTab={goTab}/>
+        )}
+        {!recording && tab === 'mapall' && (
+          <SubscriptionsMapScreen dark={dark}
+            onStartRecording={() => setRecording(true)}
+            onTapSearch={() => setShowSearch(true)}
+            onTapRouteWaypoint={(w) => setShowFriendSteps(true)}
+            onTapStandaloneWaypoint={(w) => setShowStandaloneWp(w)}
+            onCreatePoint={() => { setStandaloneCreate(true); setShowWaypoint(true); }}
+            onTapTab={goTab}/>
+        )}
+        {recording && (
+          <RecordingScreen dark={dark} paused={paused} setPaused={setPaused}
+            onStop={() => setShowStopConfirm(true)}
+            onAddWaypoint={() => setShowWaypoint(true)}
+            onTapTab={goTab}/>
+        )}
+        {tab === 'events'  && !recording && (
+          emptyMode
+            ? <EmptyEventsScreen dark={dark} onTapTab={goTab}/>
+            : <EventsScreen dark={dark} onTapTab={goTab}/>
+        )}
+        {tab === 'profile' && !recording && (
+          emptyMode
+            ? <EmptyProfileScreen dark={dark} onTapTab={goTab} onRecord={() => setRecording(true)}/>
+            : <ProfileScreenV2 dark={dark} onTapTab={goTab} who={profileWho} onSwitchTo={setProfileWho}/>
+        )}
+
+        {showWaypoint && (
+          <>
+            <div onClick={() => { setShowWaypoint(false); setStandaloneCreate(false); }} style={{
+              position:'absolute', inset:0, background:'rgba(14,17,22,0.42)', zIndex:40,
+              animation:'wv-fade-in 220ms ease-out',
+            }}/>
+            <WaypointSheet dark={dark} standalone={standaloneCreate}
+              onCancel={() => { setShowWaypoint(false); setStandaloneCreate(false); }}
+              onSave={() => { setShowWaypoint(false); showToast(standaloneCreate ? 'Точка сохранена' : 'Точка добавлена'); setStandaloneCreate(false); }}/>
+          </>
+        )}
+
+        {showRouteDetail && (
+          <>
+            <div onClick={() => setShowRouteDetail(false)} style={{
+              position:'absolute', inset:0, background:'rgba(14,17,22,0.42)', zIndex:40,
+              animation:'wv-fade-in 220ms ease-out',
+            }}/>
+            <RouteDetailSheet dark={dark} onClose={() => setShowRouteDetail(false)}/>
+          </>
+        )}
+
+        {showStopConfirm && (
+          <>
+            <div onClick={() => setShowStopConfirm(false)} style={{
+              position:'absolute', inset:0, background:'rgba(14,17,22,0.42)', zIndex:40,
+              animation:'wv-fade-in 220ms ease-out',
+            }}/>
+            <StopConfirmSheet dark={dark}
+              onSave={() => { setShowStopConfirm(false); setRecording(false); showToast('Маршрут сохранён · 3,42 км'); }}
+              onResume={() => setShowStopConfirm(false)}
+              onDiscard={() => { setShowStopConfirm(false); setRecording(false); showToast('Запись удалена'); }}/>
+          </>
+        )}
+
+        {showStandaloneWp && (
+          <>
+            <div onClick={() => setShowStandaloneWp(null)} style={{
+              position:'absolute', inset:0, background:'rgba(14,17,22,0.42)', zIndex:40,
+              animation:'wv-fade-in 220ms ease-out',
+            }}/>
+            <WaypointDetailSheet dark={dark} waypoint={showStandaloneWp}
+              onClose={() => setShowStandaloneWp(null)}
+              onRoute={() => { setShowStandaloneWp(null); showToast('Маршрут построен'); }}/>
+          </>
+        )}
+
+        {showFriendSteps && (
+          <FriendRouteSteps dark={dark}
+            onClose={() => setShowFriendSteps(false)}
+            onRepeat={() => { setShowFriendSteps(false); setRecording(true); showToast('Поехали — следуем за Аней'); }}/>
+        )}
+
+        {showEventDetail && (
+          <EventDetailScreen dark={dark}
+            onClose={() => setShowEventDetail(false)}
+            onShare={() => showToast('Ссылка скопирована')}/>
+        )}
+
+        {showEventCreate && (
+          <>
+            <div onClick={() => setShowEventCreate(false)} style={{
+              position:'absolute', inset:0, background:'rgba(14,17,22,0.42)', zIndex:40,
+              animation:'wv-fade-in 220ms ease-out',
+            }}/>
+            <EventCreateSheet dark={dark}
+              onCancel={() => setShowEventCreate(false)}
+              onSave={() => { setShowEventCreate(false); showToast('Событие создано · 18 мая'); }}/>
+          </>
+        )}
+
+        {showSearch && (
+          <SearchOverlay dark={dark}
+            onClose={() => setShowSearch(false)}
+            onTapRoute={() => { setShowSearch(false); setShowRouteDetail(true); }}
+            onTapPerson={() => { setShowSearch(false); setTab('profile'); setProfileWho('anya'); }}/>
+        )}
+
+        {toast && (
+          <div style={{
+            position:'absolute', top:110, left:'50%', transform:'translateX(-50%)',
+            background:'rgba(14,17,22,0.92)', color:'#F4F6FA',
+            padding:'10px 16px', borderRadius:999,
+            fontFamily:'Manrope', fontWeight:600, fontSize:13,
+            boxShadow:'0 8px 22px rgba(0,0,0,0.4)', zIndex:50,
+            animation:'wv-toast 1800ms cubic-bezier(.16,1,.3,1)',
+          }}>{toast}</div>
+        )}
+      </div>
+    );
+  }
+
+  // Empty-state versions of the main screens (toggle via QuickNav).
+  function EmptyEventsScreen({ dark, onTapTab }) {
+    return (
+      <div style={{ position:'absolute', inset:0, background: dark ? '#0B0D11' : '#F4F6FA', overflow:'hidden', display:'flex', flexDirection:'column' }}>
+        <div style={{ padding: '62px 20px 8px' }}>
+          <h1 style={{ margin: 0, fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 32, letterSpacing: '-0.02em', color: dark ? '#F4F6FA' : '#0E1116' }}>События</h1>
+        </div>
+        <div style={{ flex: 1, display:'flex', alignItems:'center', justifyContent:'center' }}>
+          <EmptyState dark={dark} kind="events" action="Создать событие"/>
+        </div>
+        <div style={{ position: 'absolute', left: 12, right: 12, bottom: 24, zIndex: 10 }}>
+          <TabBar active="events" dark={dark} onChange={onTapTab}/>
+        </div>
+      </div>
+    );
+  }
+  function EmptyProfileScreen({ dark, onTapTab, onRecord }) {
+    return (
+      <div style={{ position:'absolute', inset:0, background: dark ? '#0B0D11' : '#F4F6FA', overflow:'hidden', display:'flex', flexDirection:'column' }}>
+        <div style={{ padding: '62px 20px 8px' }}>
+          <h1 style={{ margin: 0, fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 28, letterSpacing: '-0.02em', color: dark ? '#F4F6FA' : '#0E1116' }}>Профиль</h1>
+        </div>
+        <div style={{ flex: 1, display:'flex', alignItems:'center', justifyContent:'center' }}>
+          <EmptyState dark={dark} kind="routes" action="Записать первый маршрут" onAction={onRecord}/>
+        </div>
+        <div style={{ position: 'absolute', left: 12, right: 12, bottom: 24, zIndex: 10 }}>
+          <TabBar active="profile" dark={dark} onChange={onTapTab}/>
+        </div>
+      </div>
+    );
+  }
+
+  function Stage() {
+    const [dark, setDark] = React.useState(true);
+    const [externalTab, setExternalTab] = React.useState(null);
+    const [externalNonce, setExternalNonce] = React.useState(0);
+    const [showLogin, setShowLogin] = React.useState(false);
+    const [emptyMode, setEmptyMode] = React.useState(false);
+
+    React.useEffect(() => {
+      window.__wvNav = (t) => {
+        if (t === 'login')  { setShowLogin(true); return; }
+        if (t === 'empty')  { setEmptyMode(e => !e); return; }
+        setShowLogin(false);
+        setExternalTab(t);
+        setExternalNonce((n) => n + 1);
+      };
+      window.__wvToggleTheme = () => setDark(d => !d);
+    }, []);
+
+    return (
+      <IOSDevice dark={dark} width={402} height={874}>
+        {showLogin
+          ? <LoginScreen dark={dark} onContinue={() => setShowLogin(false)}/>
+          : <WayvyApp dark={dark} externalTab={externalTab} externalRecording={externalNonce} emptyMode={emptyMode}/>}
+      </IOSDevice>
+    );
+  }
+
+  function QuickNav() {
+    const [active, setActive] = React.useState('map');
+    const [dark, setDark] = React.useState(true);
+    const [empty, setEmpty] = React.useState(false);
+    const tabs = [
+      { k:'login',        label:'Логин' },
+      { k:'map',          label:'Карта' },
+      { k:'mapall',       label:'Карта·все' },
+      { k:'standalonewp', label:'Точка' },
+      { k:'pointnew',     label:'Точка +' },
+      { k:'search',       label:'Поиск' },
+      { k:'record',       label:'Запись' },
+      { k:'waypoint',     label:'Точка' },
+      { k:'stopconfirm',  label:'Стоп?' },
+      { k:'routedetail',  label:'Маршрут' },
+      { k:'friendsteps',  label:'По шагам' },
+      { k:'events',       label:'События' },
+      { k:'eventnew',     label:'Событие +' },
+      { k:'eventmap',     label:'Событие↗' },
+      { k:'profile',      label:'Профиль' },
+      { k:'profileanya',  label:'Анна' },
+    ];
+    const nav = (k) => {
+      if (k !== 'empty' && k !== 'login') setActive(k);
+      window.__wvNav?.(k);
+    };
+    return (
+      <>
+        {tabs.map(t => (
+          <button key={t.k} aria-pressed={active === t.k} onClick={() => nav(t.k)}>{t.label}</button>
+        ))}
+        <span className="divider"/>
+        <button aria-pressed={empty} onClick={() => { setEmpty(e => !e); window.__wvNav?.('empty'); }}>
+          {empty ? '◐ Пустой' : '◯ Пустой'}
+        </button>
+        <button onClick={() => { setDark(d => !d); window.__wvToggleTheme?.(); }} title="Toggle theme">
+          {dark ? '☼ Light' : '☾ Dark'}
+        </button>
+      </>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<Stage/>);
+  ReactDOM.createRoot(document.getElementById('quicknav')).render(<QuickNav/>);
+</script>
+
+</body>
+</html>

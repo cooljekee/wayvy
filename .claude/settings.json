@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcrun --version)",
+      "Bash(xcrun simctl list *)",
+      "Bash(xcodebuild -version)",
+      "Bash(xcodebuild -list *)",
+      "Bash(xcodebuild -showsdks)",
+      "Bash(brew list *)"
+    ]
+  }
+}

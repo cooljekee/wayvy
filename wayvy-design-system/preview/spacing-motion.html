@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Motion</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .row { display:flex; gap:14px; align-items:flex-start; flex-wrap:wrap; }
+  .lane { flex:1 1 200px; padding:12px 14px; border:1px solid var(--border); border-radius:12px; background:var(--surface-2); display:flex; flex-direction:column; gap:10px; }
+  .track { position:relative; height:28px; background:rgba(14,17,22,.05); border-radius:999px; overflow:hidden; }
+  .dot { position:absolute; top:4px; left:4px; width:20px; height:20px; border-radius:999px; background:var(--wv-coral-500); }
+  .lbl { font: 700 12px var(--font-sans); color: var(--fg); }
+  .tok { font: 500 10px var(--font-mono); color: var(--fg-3); }
+
+  @keyframes glide   { 0%,15% { left:4px } 70%,100% { left:calc(100% - 24px) } }
+  .a1 .dot { animation: glide 2.2s cubic-bezier(.16,1,.3,1) infinite; }
+  .a2 .dot { animation: glide 2.2s cubic-bezier(.65,0,.35,1) infinite; }
+  .a3 .dot { animation: glide 2.2s cubic-bezier(.34,1.56,.64,1) infinite; }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Motion · easings & durations</div>
+  <div class="row">
+    <div class="lane a1">
+      <div class="lbl">ease-out</div>
+      <div class="track"><div class="dot"></div></div>
+      <div class="tok">cubic-bezier(.16, 1, .3, 1) · iOS decel · sheets, page transitions</div>
+    </div>
+    <div class="lane a2">
+      <div class="lbl">ease-in-out</div>
+      <div class="track"><div class="dot"></div></div>
+      <div class="tok">cubic-bezier(.65, 0, .35, 1) · property morphs, theme swap</div>
+    </div>
+    <div class="lane a3">
+      <div class="lbl">spring</div>
+      <div class="track"><div class="dot"></div></div>
+      <div class="tok">cubic-bezier(.34, 1.56, .64, 1) · button press, pin tap</div>
+    </div>
+  </div>
+  <div class="row" style="gap:10px">
+    <span class="tok" style="font-size:11px; color:var(--fg-2)"><b style="color:var(--fg)">fast</b> 140ms</span>
+    <span class="tok" style="font-size:11px; color:var(--fg-2)"><b style="color:var(--fg)">base</b> 220ms</span>
+    <span class="tok" style="font-size:11px; color:var(--fg-2)"><b style="color:var(--fg)">slow</b> 360ms</span>
+    <span class="tok" style="font-size:11px; color:var(--fg-2)"><b style="color:var(--fg)">sheet</b> 420ms</span>
+  </div>
+</div>
+</body></html>

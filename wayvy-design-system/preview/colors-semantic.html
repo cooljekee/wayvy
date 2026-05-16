@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Semantic & Visibility</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
+  .tile { display:flex; flex-direction:column; gap:8px; padding:14px; border-radius:14px; border:1px solid var(--border); background:var(--surface); }
+  .swrow { display:flex; align-items:center; gap:10px; }
+  .dot { width:18px; height:18px; border-radius:999px; }
+  .pill { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font: 600 11px var(--font-sans); }
+  .hex { font: 500 10px var(--font-mono); color: var(--fg-3); }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Semantic</div>
+  <div class="grid">
+    <div class="tile"><div class="swrow"><div class="dot" style="background:#2DBF6B"></div><div class="wv-body-strong">Success</div></div><div class="hex">#2DBF6B</div></div>
+    <div class="tile"><div class="swrow"><div class="dot" style="background:#F4B740"></div><div class="wv-body-strong">Warning</div></div><div class="hex">#F4B740</div></div>
+    <div class="tile"><div class="swrow"><div class="dot" style="background:#E5484D"></div><div class="wv-body-strong">Danger</div></div><div class="hex">#E5484D</div></div>
+  </div>
+
+  <div class="wv-eyebrow" style="margin-top:6px">Visibility chips</div>
+  <div class="row" style="gap:10px">
+    <span class="pill" style="background:rgba(45,191,107,.14); color:#1F8A4A">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+      Публичный
+    </span>
+    <span class="pill" style="background:rgba(20,184,199,.16); color:#0A7F8A">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Подписчики
+    </span>
+    <span class="pill" style="background:rgba(91,101,119,.14); color:#3A4150">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Приватный
+    </span>
+  </div>
+</div>
+</body></html>

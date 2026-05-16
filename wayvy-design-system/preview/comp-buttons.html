@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Buttons</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font: 600 15px var(--font-sans); letter-spacing:-0.005em;
+    border-radius:14px; padding:12px 18px; border:1px solid transparent; cursor:pointer;
+    transition: transform var(--dur-fast) var(--ease-spring), background var(--dur-fast) var(--ease-out);
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary   { background:var(--wv-coral-500); color:#fff; box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 4px 12px rgba(255,90,78,.28); }
+  .btn-primary:hover { background:var(--wv-coral-600); }
+  .btn-secondary { background:var(--surface); color:var(--fg); border-color:var(--border-strong); }
+  .btn-secondary:hover { background:var(--surface-2); }
+  .btn-ghost     { background:transparent; color:var(--fg); }
+  .btn-ghost:hover { background:var(--surface-3); }
+  .btn-danger    { background:transparent; color:var(--wv-danger); border-color:rgba(229,72,77,.32); }
+  .btn-danger:hover { background:rgba(229,72,77,.08); }
+  .btn-sm { font-size:13px; padding:8px 12px; border-radius:10px; }
+  .btn-lg { font-size:17px; padding:16px 22px; border-radius:16px; }
+  .btn-icon { width:44px; height:44px; padding:0; border-radius:14px; }
+  .stack { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+</style></head>
+<body>
+<div class="card card--surface card--tight">
+  <div class="wv-eyebrow">Buttons</div>
+  <div class="stack">
+    <button class="btn btn-primary">Начать маршрут</button>
+    <button class="btn btn-secondary">Сохранить</button>
+    <button class="btn btn-ghost">Отмена</button>
+    <button class="btn btn-danger">Удалить</button>
+  </div>
+  <div class="stack">
+    <button class="btn btn-primary btn-lg">Записать прогулку</button>
+    <button class="btn btn-primary btn-sm">+ Точка</button>
+    <button class="btn btn-secondary btn-sm">Подписаться</button>
+    <button class="btn btn-icon btn-secondary" aria-label="locate">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+    </button>
+    <button class="btn btn-icon" style="background:var(--wv-coral-500); color:#fff; box-shadow:0 4px 14px rgba(255,90,78,.36)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+    </button>
+  </div>
+</div>
+</body></html>

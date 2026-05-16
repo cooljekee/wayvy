@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Event Card</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+  body { background: var(--bg); }
+  .card { padding:18px; }
+  .ecard { background:var(--surface); border-radius:20px; box-shadow: var(--shadow-2); border:1px solid var(--border); padding:14px 16px; display:grid; grid-template-columns: 60px 1fr auto; gap:14px; align-items:center; }
+  .datechip { background:#0E1116; border-radius:14px; padding:6px 0; text-align:center; box-shadow: 0 1px 0 rgba(255,255,255,.06) inset; }
+  .datechip .m { font:700 10px var(--font-sans); color:#8A93A4; letter-spacing:.10em; text-transform:uppercase; }
+  .datechip .d { font:800 22px var(--font-display); color:#FF5A4E; line-height:1; margin-top:2px; letter-spacing:-0.02em; }
+  .title { font:700 17px var(--font-display); color:var(--fg); margin:0; }
+  .meta { font:500 13px var(--font-sans); color:var(--fg-2); margin-top:2px; display:flex; align-items:center; gap:6px;}
+  .pill { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; background:rgba(20,184,199,.14); color:#0A7F8A; font:700 11px var(--font-sans); }
+  .going { display:flex; align-items:center; gap:-6px; }
+  .av { width:22px; height:22px; border-radius:999px; border:2px solid var(--surface); }
+  .av:nth-child(2) { margin-left:-8px; }
+  .av:nth-child(3) { margin-left:-8px; }
+  .countbtn { background:var(--wv-coral-500); color:#fff; padding:8px 14px; border-radius:12px; font:700 13px var(--font-sans); border:none; cursor:pointer; }
+</style></head>
+<body>
+<div class="card">
+  <div class="ecard">
+    <div class="datechip">
+      <div class="m">Май</div>
+      <div class="d">18</div>
+    </div>
+    <div>
+      <div class="title">Пикник в Парке Горького</div>
+      <div class="meta">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        18:00 · Главный вход
+      </div>
+      <div style="display:flex; gap:8px; margin-top:6px; align-items:center">
+        <span class="pill">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Подписчики
+        </span>
+        <div class="going">
+          <div class="av" style="background:linear-gradient(135deg,#FFB1A4,#FF5A4E)"></div>
+          <div class="av" style="background:linear-gradient(135deg,#7ADBE2,#14B8C7)"></div>
+          <div class="av" style="background:linear-gradient(135deg,#FCE3A8,#F4B740)"></div>
+        </div>
+        <span style="font:600 12px var(--font-sans); color:var(--fg-3)">+5 идут</span>
+      </div>
+    </div>
+    <button class="countbtn">Иду</button>
+  </div>
+</div>
+</body></html>
