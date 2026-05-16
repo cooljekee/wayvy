@@ -43,7 +43,7 @@ var validVisibility = map[string]bool{
 func (h *RouteHandler) CreateRoute(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // 1 MB for GPS track
 
-	userID, _ := authmw.UserIDFromCtx(r.Context())
+	userID := authmw.MustUserIDFromCtx(r.Context())
 
 	var body struct {
 		Title      *string         `json:"title"`
@@ -58,8 +58,8 @@ func (h *RouteHandler) CreateRoute(w http.ResponseWriter, r *http.Request) {
 		respondError(w, http.StatusBadRequest, "invalid JSON body", "BAD_REQUEST")
 		return
 	}
-	if len(body.GpsTrack) == 0 || string(body.GpsTrack) == "null" {
-		respondError(w, http.StatusUnprocessableEntity, "gps_track is required", "VALIDATION_ERROR")
+	if !isLineString(body.GpsTrack) {
+		respondError(w, http.StatusUnprocessableEntity, "gps_track must be a GeoJSON LineString", "VALIDATION_ERROR")
 		return
 	}
 	if !validVisibility[body.Visibility] {
@@ -95,7 +95,7 @@ func (h *RouteHandler) CreateRoute(w http.ResponseWriter, r *http.Request) {
 
 // GET /routes
 func (h *RouteHandler) ListMyRoutes(w http.ResponseWriter, r *http.Request) {
-	userID, _ := authmw.UserIDFromCtx(r.Context())
+	userID := authmw.MustUserIDFromCtx(r.Context())
 
 	routes, err := h.svc.ListMyRoutes(r.Context(), userID)
 	if err != nil {
@@ -111,7 +111,7 @@ func (h *RouteHandler) ListMyRoutes(w http.ResponseWriter, r *http.Request) {
 
 // GET /routes/{id}
 func (h *RouteHandler) GetRoute(w http.ResponseWriter, r *http.Request) {
-	viewerID, _ := authmw.UserIDFromCtx(r.Context())
+	viewerID := authmw.MustUserIDFromCtx(r.Context())
 
 	routeID, err := uuid.Parse(chi.URLParam(r, "id"))
 	if err != nil {
@@ -134,7 +134,7 @@ func (h *RouteHandler) GetRoute(w http.ResponseWriter, r *http.Request) {
 
 // DELETE /routes/{id}
 func (h *RouteHandler) DeleteRoute(w http.ResponseWriter, r *http.Request) {
-	userID, _ := authmw.UserIDFromCtx(r.Context())
+	userID := authmw.MustUserIDFromCtx(r.Context())
 
 	routeID, err := uuid.Parse(chi.URLParam(r, "id"))
 	if err != nil {
@@ -156,7 +156,7 @@ func (h *RouteHandler) DeleteRoute(w http.ResponseWriter, r *http.Request) {
 
 // GET /routes/feed
 func (h *RouteHandler) GetFeed(w http.ResponseWriter, r *http.Request) {
-	userID, _ := authmw.UserIDFromCtx(r.Context())
+	userID := authmw.MustUserIDFromCtx(r.Context())
 
 	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
@@ -171,4 +171,18 @@ func (h *RouteHandler) GetFeed(w http.ResponseWriter, r *http.Request) {
 		routes = []*model.Route{}
 	}
 	respondJSON(w, http.StatusOK, map[string]any{"items": routes, "total": total})
+}
+
+// isLineString validates that raw is a GeoJSON object with type "LineString".
+func isLineString(raw json.RawMessage) bool {
+	if len(raw) == 0 {
+		return false
+	}
+	var shape struct {
+		Type string `json:"type"`
+	}
+	if err := json.Unmarshal(raw, &shape); err != nil {
+		return false
+	}
+	return shape.Type == "LineString"
 }

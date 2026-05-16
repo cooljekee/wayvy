@@ -37,3 +37,13 @@ func UserIDFromCtx(ctx context.Context) (uuid.UUID, bool) {
 	id, ok := ctx.Value(ctxKey{}).(uuid.UUID)
 	return id, ok
 }
+
+// MustUserIDFromCtx returns the user UUID or panics if middleware was not applied.
+// Use inside handler groups protected by UserIDMiddleware — panic is caught by Recoverer.
+func MustUserIDFromCtx(ctx context.Context) uuid.UUID {
+	id, ok := ctx.Value(ctxKey{}).(uuid.UUID)
+	if !ok {
+		panic("userID missing from context — UserIDMiddleware not applied")
+	}
+	return id
+}
