@@ -304,11 +304,6 @@ struct EventsView: View {
 
 // MARK: - Stubs (replaced in Tasks 7 & 8)
 
-struct EventCreateSheet: View {
-    var onSave: (EventResponse) -> Void = { _ in }
-    var body: some View { EmptyView() }
-}
-
 struct EventDetailScreen: View {
     var event: EventResponse
     var body: some View { EmptyView() }
