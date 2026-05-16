@@ -67,9 +67,8 @@ actor RouteService {
         let (data, response) = try await session.data(for: req)
         try assertHTTP(response, data: data)
 
-        struct Wrapper: Decodable { let routes: [RouteResponse] }
-        return (try? decoder.decode(Wrapper.self, from: data))?.routes
-            ?? (try decoder.decode([RouteResponse].self, from: data))
+        struct Wrapper: Decodable { let items: [RouteResponse] }
+        return try decoder.decode(Wrapper.self, from: data).items
     }
 
     // MARK: - Helpers
