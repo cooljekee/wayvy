@@ -20,7 +20,7 @@ struct ContentView: View {
         @Bindable var appState = appState
         ZStack(alignment: .bottomTrailing) {
             TabView(selection: $appState.selectedTab) {
-                tab("Карта")
+                MapBrowseView()
                     .tag(AppState.Tab.map)
                     .tabItem { Label("Карта", systemImage: "map") }
 
@@ -41,6 +41,9 @@ struct ContentView: View {
                 RecordFAB()
             }
         }
+        .fullScreenCover(isPresented: $appState.isShowingRecording) {
+            RecordingView()
+        }
     }
 
     private func tab(_ title: String) -> some View {
@@ -54,8 +57,10 @@ struct ContentView: View {
 // MARK: - RecordFAB
 
 private struct RecordFAB: View {
+    @Environment(AppState.self) private var appState
+
     var body: some View {
-        Button(action: {}) {
+        Button(action: { appState.isShowingRecording = true }) {
             Circle()
                 .fill(Color.wvCoral500)
                 .frame(width: 56, height: 56)

@@ -13,6 +13,7 @@ final class AppState {
     var selectedTab: Tab = .map
     var isAuthenticated: Bool = false
     var isRecording: Bool = false
+    var isShowingRecording: Bool = false
     var currentUserPhone: String?
     var jwtToken: String?
 
