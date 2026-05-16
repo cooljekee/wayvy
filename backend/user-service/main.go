@@ -17,6 +17,7 @@ import (
 
 	"github.com/cooljekee/wayvy/user-service/internal/db"
 	"github.com/cooljekee/wayvy/user-service/internal/handler"
+	authmw "github.com/cooljekee/wayvy/user-service/internal/middleware"
 	"github.com/cooljekee/wayvy/user-service/internal/service"
 	"github.com/cooljekee/wayvy/user-service/internal/smsaero"
 	"github.com/cooljekee/wayvy/user-service/internal/store"
@@ -71,6 +72,11 @@ func main() {
 	authH      := handler.NewAuthHandler(authSvc)
 	validateH  := handler.NewValidateHandler(authSvc)
 
+	followStore := store.NewFollowStore(pool)
+	socialSvc   := service.NewSocialService(followStore, rdb)
+	userSvc     := service.NewUserService(userStore)
+	userH       := handler.NewUserHandler(socialSvc, userSvc)
+
 	// --- router ---
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -82,6 +88,19 @@ func main() {
 	r.Post("/auth/otp/request", authH.RequestOTP)
 	r.Post("/auth/otp/verify",  authH.VerifyOTP)
 	r.Get("/auth/validate",     validateH.Validate)
+
+	// Public user endpoints — no JWT
+	r.Get("/users/search", userH.Search)
+
+	// Protected user endpoints — JWT required (X-User-ID injected by Nginx)
+	r.Group(func(r chi.Router) {
+		r.Use(authmw.UserIDMiddleware)
+		r.Post("/users/{id}/follow",    userH.Follow)
+		r.Delete("/users/{id}/follow",  userH.Unfollow)
+		r.Get("/users/{id}/followers",  userH.Followers)
+		r.Get("/users/{id}/following",  userH.Following)
+		r.Get("/users/{id}/profile",    userH.Profile)
+	})
 
 	// --- HTTP server ---
 	port := os.Getenv("PORT")
