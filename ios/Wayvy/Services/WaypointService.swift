@@ -16,6 +16,20 @@ struct Waypoint: Codable, Identifiable {
     let createdAt: Date?
 }
 
+struct MapWaypoint: Codable, Identifiable, Sendable {
+    let id: UUID
+    let routeId: UUID?
+    let title: String
+    let lat: Double
+    let lon: Double
+    let coverPhotoURL: String?
+    let authorID: UUID?
+    let authorName: String?
+    let stepIndex: Int?
+
+    var isStandalone: Bool { routeId == nil }
+}
+
 struct WaypointPhoto: Codable, Identifiable {
     let id: UUID
     let waypointId: UUID
@@ -72,6 +86,25 @@ actor WaypointService {
         let (data, response) = try await session.data(for: req)
         try assertHTTP(response, data: data)
         return try decoder.decode(Waypoint.self, from: data)
+    }
+
+    // MARK: - Map bbox query (GET /waypoints/map?bbox=minLon,minLat,maxLon,maxLat)
+
+    func fetchByBBox(minLon: Double, minLat: Double, maxLon: Double, maxLat: Double) async throws -> [MapWaypoint] {
+        var comps = URLComponents(
+            url: baseURL.appendingPathComponent("/waypoints/map"),
+            resolvingAgainstBaseURL: false
+        )!
+        comps.queryItems = [
+            URLQueryItem(name: "bbox", value: "\(minLon),\(minLat),\(maxLon),\(maxLat)")
+        ]
+        var req = URLRequest(url: comps.url!)
+        addAuth(&req)
+
+        let (data, response) = try await session.data(for: req)
+        try assertHTTP(response, data: data)
+        struct Wrapper: Decodable { let items: [MapWaypoint] }
+        return try decoder.decode(Wrapper.self, from: data).items
     }
 
     // MARK: - Nearby

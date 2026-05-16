@@ -8,6 +8,10 @@ struct YandexMapView: UIViewRepresentable {
     var followPolylines: [[CLLocationCoordinate2D]]
     var waypoints: [WaypointPin] = []
     var onLongPress: ((CLLocationCoordinate2D) -> Void)?
+    // Optional: called when a waypoint placemark is tapped
+    var onWaypointTap: ((UUID) -> Void)?
+    // Optional: called when camera stops moving (center coordinate)
+    var onCameraIdle: ((CLLocationCoordinate2D) -> Void)?
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
@@ -23,6 +27,8 @@ struct YandexMapView: UIViewRepresentable {
         longPress.minimumPressDuration = 0.5
         mapView.addGestureRecognizer(longPress)
 
+        mapView.mapWindow.map.addCameraListener(with: context.coordinator)
+
         return mapView
     }
 
@@ -32,15 +38,34 @@ struct YandexMapView: UIViewRepresentable {
 
     // MARK: - Coordinator
 
-    final class Coordinator: NSObject {
+    final class Coordinator: NSObject, YMKMapCameraListener, YMKMapObjectTapListener {
         var parent: YandexMapView
         private var meDot: YMKPlacemarkMapObject?
         private var ownObjects: [YMKPolylineMapObject] = []
         private var followObjects: [YMKPolylineMapObject] = []
         private var waypointPlacemarks: [UUID: YMKPlacemarkMapObject] = [:]
+        // Map from placemark object → waypoint ID (for tap handling)
+        private var placemarkToID: [ObjectIdentifier: UUID] = [:]
 
         init(_ parent: YandexMapView) {
             self.parent = parent
+        }
+
+        // MARK: - YMKMapCameraListener
+
+        func onCameraPositionChanged(
+            with map: YMKMap,
+            cameraPosition: YMKCameraPosition,
+            cameraUpdateReason: YMKCameraUpdateReason,
+            finished: Bool
+        ) {
+            guard finished else { return }
+            let coord = CLLocationCoordinate2D(
+                latitude: Double(cameraPosition.target.latitude),
+                longitude: Double(cameraPosition.target.longitude)
+            )
+            let callback = parent.onCameraIdle
+            Task { @MainActor in callback?(coord) }
         }
 
         func update(mapView: YMKMapView, parent: YandexMapView) {
@@ -103,6 +128,7 @@ struct YandexMapView: UIViewRepresentable {
             // Remove stale
             for id in oldIDs.subtracting(newIDs) {
                 if let obj = waypointPlacemarks.removeValue(forKey: id) {
+                    placemarkToID.removeValue(forKey: ObjectIdentifier(obj))
                     objects.remove(with: obj)
                 }
             }
@@ -112,8 +138,21 @@ struct YandexMapView: UIViewRepresentable {
                 let point = YMKPoint(latitude: pin.coordinate.latitude, longitude: pin.coordinate.longitude)
                 let placemark = objects.addPlacemark(with: point)
                 placemark.setIconWith(WaypointBubble.makeImage(kind: pin.kind))
+                if parent.onWaypointTap != nil {
+                    placemark.addTapListener(with: self)
+                }
                 waypointPlacemarks[pin.id] = placemark
+                placemarkToID[ObjectIdentifier(placemark)] = pin.id
             }
+        }
+
+        // MARK: - YMKMapObjectTapListener
+
+        func onMapObjectTap(with mapObject: YMKMapObject, point: YMKPoint) -> Bool {
+            guard let id = placemarkToID[ObjectIdentifier(mapObject)] else { return false }
+            let callback = parent.onWaypointTap
+            Task { @MainActor in callback?(id) }
+            return true
         }
 
         // MARK: - Long press

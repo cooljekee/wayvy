@@ -24,7 +24,7 @@ struct ContentView: View {
                     .tag(AppState.Tab.map)
                     .tabItem { Label("Карта", systemImage: "map") }
 
-                tab("Карта·все")
+                SubscriptionsMapView()
                     .tag(AppState.Tab.subscriptions)
                     .tabItem { Label("Карта·все", systemImage: "person.2") }
 
@@ -32,7 +32,7 @@ struct ContentView: View {
                     .tag(AppState.Tab.events)
                     .tabItem { Label("События", systemImage: "calendar") }
 
-                tab("Профиль")
+                ProfileView(subject: .own)
                     .tag(AppState.Tab.profile)
                     .tabItem { Label("Профиль", systemImage: "person.crop.circle") }
             }

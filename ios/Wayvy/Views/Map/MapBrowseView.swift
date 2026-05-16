@@ -60,23 +60,8 @@ struct MapBrowseView: View {
                 .presentationCornerRadius(.radius28)
             }
         }
-        .sheet(isPresented: $showSearch) {
-            // SearchOverlay — Phase 4 stub
-            VStack(spacing: .sp4) {
-                Text("Поиск")
-                    .font(.wvH3)
-                    .foregroundStyle(Color.wvInk50)
-                Text("Скоро будет")
-                    .font(.wvBody)
-                    .foregroundStyle(Color.wvInk400)
-                Spacer()
-            }
-            .padding(.top, .sp8)
-            .frame(maxWidth: .infinity)
-            .background(Color.wvInk900)
-            .presentationDetents([.large])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(.radius28)
+        .fullScreenCover(isPresented: $showSearch) {
+            SearchOverlayView(onClose: { showSearch = false })
         }
         .task {
             await LocationService.shared.requestPermission()
