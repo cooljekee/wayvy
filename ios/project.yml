@@ -37,7 +37,7 @@ targets:
           - Config/Config.xcconfig.example
     dependencies:
       - package: YandexMapsMobile
-        product: YandexMapsMobile
+        product: YandexMapsMobileFull
     info:
       path: Wayvy/Info.plist
       properties:
