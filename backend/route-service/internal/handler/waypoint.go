@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -22,6 +23,7 @@ type WaypointServicer interface {
 	Nearby(ctx context.Context, lon, lat float64, radiusM int, viewerID uuid.UUID) ([]*model.Waypoint, error)
 	AddPhoto(ctx context.Context, waypointID, ownerID uuid.UUID, r2Key, url string) (*model.Photo, error)
 	ListPhotos(ctx context.Context, waypointID, viewerID uuid.UUID) ([]*model.Photo, error)
+	MapQuery(ctx context.Context, viewerID uuid.UUID, lonMin, latMin, lonMax, latMax float64) ([]*model.Waypoint, error)
 }
 
 type WaypointHandler struct {
@@ -199,6 +201,36 @@ func (h *WaypointHandler) AddPhoto(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondJSON(w, http.StatusCreated, photo)
+}
+
+// GET /waypoints/map?bbox=lonMin,latMin,lonMax,latMax
+// Returns waypoints from followed users within the bbox (for Карта·все tab).
+func (h *WaypointHandler) MapQuery(w http.ResponseWriter, r *http.Request) {
+	viewerID := authmw.MustUserIDFromCtx(r.Context())
+
+	bbox := r.URL.Query().Get("bbox")
+	if bbox == "" {
+		respondError(w, http.StatusUnprocessableEntity, "bbox query param is required (lonMin,latMin,lonMax,latMax)", "VALIDATION_ERROR")
+		return
+	}
+
+	var lonMin, latMin, lonMax, latMax float64
+	n, _ := fmt.Sscanf(bbox, "%f,%f,%f,%f", &lonMin, &latMin, &lonMax, &latMax)
+	if n != 4 {
+		respondError(w, http.StatusUnprocessableEntity, "bbox must be lonMin,latMin,lonMax,latMax", "VALIDATION_ERROR")
+		return
+	}
+
+	waypoints, err := h.svc.MapQuery(r.Context(), viewerID, lonMin, latMin, lonMax, latMax)
+	if err != nil {
+		slog.ErrorContext(r.Context(), "MapQuery internal error", "err", err)
+		respondError(w, http.StatusInternalServerError, "failed to query map waypoints", "INTERNAL_ERROR")
+		return
+	}
+	if waypoints == nil {
+		waypoints = []*model.Waypoint{}
+	}
+	respondJSON(w, http.StatusOK, map[string]any{"items": waypoints})
 }
 
 // GET /waypoints/{id}/photos

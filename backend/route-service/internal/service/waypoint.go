@@ -18,6 +18,7 @@ type WaypointStorer interface {
 	Nearby(ctx context.Context, lon, lat float64, radiusM int, viewerID uuid.UUID) ([]*model.Waypoint, error)
 	AddPhoto(ctx context.Context, in model.AddPhotoInput) (*model.Photo, error)
 	ListPhotos(ctx context.Context, waypointID uuid.UUID) ([]*model.Photo, error)
+	ListInBboxForFollows(ctx context.Context, viewerID uuid.UUID, lonMin, latMin, lonMax, latMax float64) ([]*model.Waypoint, error)
 }
 
 type WaypointService struct {
@@ -77,4 +78,9 @@ func (s *WaypointService) ListPhotos(ctx context.Context, waypointID, viewerID u
 		return nil, err
 	}
 	return s.store.ListPhotos(ctx, waypointID)
+}
+
+// MapQuery returns waypoints from users the viewer follows, within a geographic bbox.
+func (s *WaypointService) MapQuery(ctx context.Context, viewerID uuid.UUID, lonMin, latMin, lonMax, latMax float64) ([]*model.Waypoint, error) {
+	return s.store.ListInBboxForFollows(ctx, viewerID, lonMin, latMin, lonMax, latMax)
 }

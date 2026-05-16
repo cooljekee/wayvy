@@ -174,6 +174,35 @@ func (s *WaypointStore) ListPhotos(ctx context.Context, waypointID uuid.UUID) ([
 	return photos, rows.Err()
 }
 
+// $1=viewerID, $2=lonMin, $3=latMin, $4=lonMax, $5=latMax
+const mapBboxSQL = `
+SELECT ` + waypointCols + `
+FROM waypoints w
+WHERE w.user_id IN (SELECT following_id FROM follows WHERE follower_id = $1)
+  AND ST_Within(w.location, ST_MakeEnvelope($2, $3, $4, $5, 4326))
+  AND w.visibility IN ('public', 'followers')
+  AND w.user_id IS NOT NULL
+ORDER BY w.created_at DESC
+LIMIT 100`
+
+func (s *WaypointStore) ListInBboxForFollows(ctx context.Context, viewerID uuid.UUID, lonMin, latMin, lonMax, latMax float64) ([]*model.Waypoint, error) {
+	rows, err := s.db.Query(ctx, mapBboxSQL, viewerID, lonMin, latMin, lonMax, latMax)
+	if err != nil {
+		return nil, fmt.Errorf("store.ListInBboxForFollows query: %w", err)
+	}
+	defer rows.Close()
+
+	var waypoints []*model.Waypoint
+	for rows.Next() {
+		w, err := scanWaypoint(rows)
+		if err != nil {
+			return nil, fmt.Errorf("store.ListInBboxForFollows scan: %w", err)
+		}
+		waypoints = append(waypoints, w)
+	}
+	return waypoints, rows.Err()
+}
+
 func scanWaypoint(s scanner) (*model.Waypoint, error) {
 	var w model.Waypoint
 	err := s.Scan(

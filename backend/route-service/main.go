@@ -64,7 +64,8 @@ func main() {
 		r.Delete("/routes/{id}", routeH.DeleteRoute)
 		r.Get("/routes/{id}/waypoints", waypointH.ListByRoute)
 
-		// Waypoints — static "nearby" registered before param {id}
+		// Waypoints — static routes registered before param {id}
+		r.Get("/waypoints/map",    waypointH.MapQuery)
 		r.Get("/waypoints/nearby", waypointH.Nearby)
 		r.Post("/waypoints", waypointH.CreateWaypoint)
 		r.Get("/waypoints/{id}", waypointH.GetWaypoint)
