@@ -65,10 +65,11 @@ func main() {
 	}
 
 	// --- dependency graph ---
-	smsClient := smsaero.New(smsEmail, smsKey)
+	smsClient  := smsaero.New(smsEmail, smsKey)
 	userStore  := store.NewUserStore(pool)
 	authSvc    := service.NewAuthService(userStore, smsClient, rdb, jwtSecret)
 	authH      := handler.NewAuthHandler(authSvc)
+	validateH  := handler.NewValidateHandler(authSvc)
 
 	// --- router ---
 	r := chi.NewRouter()
@@ -80,6 +81,7 @@ func main() {
 	r.Get("/health", handler.Health)
 	r.Post("/auth/otp/request", authH.RequestOTP)
 	r.Post("/auth/otp/verify",  authH.VerifyOTP)
+	r.Get("/auth/validate",     validateH.Validate)
 
 	// --- HTTP server ---
 	port := os.Getenv("PORT")

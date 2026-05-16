@@ -18,6 +18,7 @@ var (
 	ErrRateLimited  = errors.New("too many requests — wait 60 seconds")
 	ErrInvalidCode  = errors.New("invalid or expired code")
 	ErrInvalidPhone = errors.New("invalid phone number")
+	ErrInvalidToken = errors.New("invalid or expired token")
 )
 
 type SMSSender interface {
@@ -120,6 +121,30 @@ func (s *AuthService) VerifyOTP(ctx context.Context, phone, code string) (string
 		return "", fmt.Errorf("service.VerifyOTP sign jwt: %w", err)
 	}
 	return token, nil
+}
+
+// ValidateToken parses and validates a JWT signed by this service.
+// Returns the user UUID from the sub claim, or ErrInvalidToken.
+func (s *AuthService) ValidateToken(tokenString string) (uuid.UUID, error) {
+	t, err := jwt.Parse(tokenString, func(t *jwt.Token) (any, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
+		}
+		return s.jwtSecret, nil
+	})
+	if err != nil || !t.Valid {
+		return uuid.Nil, ErrInvalidToken
+	}
+	claims, ok := t.Claims.(jwt.MapClaims)
+	if !ok {
+		return uuid.Nil, ErrInvalidToken
+	}
+	sub, _ := claims["sub"].(string)
+	id, err := uuid.Parse(sub)
+	if err != nil {
+		return uuid.Nil, ErrInvalidToken
+	}
+	return id, nil
 }
 
 func (s *AuthService) signJWT(userID uuid.UUID) (string, error) {
