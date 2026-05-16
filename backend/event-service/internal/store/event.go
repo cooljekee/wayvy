@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -158,4 +159,120 @@ func scanEvent(s scanner) (*model.Event, error) {
 		return nil, fmt.Errorf("store.scanEvent: %w", err)
 	}
 	return &e, nil
+}
+
+// scanEventNearby scans 14 columns: all from scanEvent + distance_m as the 14th.
+func scanEventNearby(s scanner) (*model.Event, error) {
+	var e model.Event
+	err := s.Scan(
+		&e.ID, &e.UserID, &e.Title, &e.Description, &e.CoverURL,
+		&e.Location,
+		&e.Address, &e.StartsAt, &e.EndsAt, &e.Visibility,
+		&e.AttendCount, &e.IsAttending,
+		&e.CreatedAt,
+		&e.DistanceM,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("store.scanEventNearby: %w", err)
+	}
+	return &e, nil
+}
+
+const nearbyEventsSQL = `
+SELECT e.id, e.user_id, e.title, e.description, e.cover_url,
+    ST_AsGeoJSON(e.location)::json AS location,
+    e.address, e.starts_at, e.ends_at, e.visibility::text,
+    COUNT(ea.user_id)                    AS attend_count,
+    BOOL_OR(ea.user_id = $4)             AS is_attending,
+    e.created_at,
+    ST_Distance(e.location::geography,
+                ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography) AS distance_m
+FROM events e
+LEFT JOIN event_attendees ea ON ea.event_id = e.id
+WHERE e.starts_at >= $5
+  AND ST_DWithin(
+      e.location::geography,
+      ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
+      $3
+  )
+  AND (
+      e.visibility = 'public'
+      OR e.user_id = $4
+      OR (e.visibility = 'followers' AND EXISTS (
+          SELECT 1 FROM follows WHERE follower_id = $4 AND following_id = e.user_id
+      ))
+  )
+GROUP BY e.id
+ORDER BY e.starts_at ASC
+LIMIT 50`
+
+// Nearby returns events within radiusM metres of (lon, lat) starting from `from`,
+// visible to viewerID. ($1=lon, $2=lat, $3=radius_m, $4=viewerID, $5=from)
+func (s *EventStore) Nearby(ctx context.Context, lon, lat float64, radiusM int, from time.Time, viewerID uuid.UUID) ([]*model.Event, error) {
+	rows, err := s.db.Query(ctx, nearbyEventsSQL, lon, lat, radiusM, viewerID, from)
+	if err != nil {
+		return nil, fmt.Errorf("store.Nearby: %w", err)
+	}
+	defer rows.Close()
+
+	var events []*model.Event
+	for rows.Next() {
+		e, err := scanEventNearby(rows)
+		if err != nil {
+			return nil, fmt.Errorf("store.Nearby scan: %w", err)
+		}
+		events = append(events, e)
+	}
+	return events, rows.Err()
+}
+
+const attendSQL = `
+INSERT INTO event_attendees (event_id, user_id) VALUES ($1, $2)
+ON CONFLICT DO NOTHING`
+
+// Attend registers userID as attending eventID (idempotent — ON CONFLICT DO NOTHING).
+func (s *EventStore) Attend(ctx context.Context, eventID, userID uuid.UUID) error {
+	_, err := s.db.Exec(ctx, attendSQL, eventID, userID)
+	if err != nil {
+		return fmt.Errorf("store.Attend: %w", err)
+	}
+	return nil
+}
+
+const unattendSQL = `DELETE FROM event_attendees WHERE event_id = $1 AND user_id = $2`
+
+// Unattend removes the attendance record. No error if the record does not exist.
+func (s *EventStore) Unattend(ctx context.Context, eventID, userID uuid.UUID) error {
+	_, err := s.db.Exec(ctx, unattendSQL, eventID, userID)
+	if err != nil {
+		return fmt.Errorf("store.Unattend: %w", err)
+	}
+	return nil
+}
+
+const listAttendeesSQL = `
+SELECT u.id, u.username, u.avatar_url
+FROM event_attendees ea
+JOIN users u ON u.id = ea.user_id
+WHERE ea.event_id = $1
+ORDER BY ea.created_at ASC
+LIMIT $2`
+
+// ListAttendees returns up to limit users attending eventID.
+func (s *EventStore) ListAttendees(ctx context.Context, eventID uuid.UUID, limit int) ([]*model.AttendeeUser, error) {
+	rows, err := s.db.Query(ctx, listAttendeesSQL, eventID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("store.ListAttendees: %w", err)
+	}
+	defer rows.Close()
+
+	var attendees []*model.AttendeeUser
+	for rows.Next() {
+		var a model.AttendeeUser
+		if err := rows.Scan(&a.ID, &a.Username, &a.AvatarURL); err != nil {
+			return nil, fmt.Errorf("store.ListAttendees scan: %w", err)
+		}
+		attendees = append(attendees, &a)
+	}
+	return attendees, rows.Err()
 }

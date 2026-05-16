@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 
@@ -19,6 +20,10 @@ type EventStorer interface {
 	List(ctx context.Context, viewerID uuid.UUID, limit, offset int) ([]*model.Event, int, error)
 	GetByID(ctx context.Context, eventID, viewerID uuid.UUID) (*model.Event, error)
 	Delete(ctx context.Context, eventID, userID uuid.UUID) (bool, error)
+	Nearby(ctx context.Context, lon, lat float64, radiusM int, from time.Time, viewerID uuid.UUID) ([]*model.Event, error)
+	Attend(ctx context.Context, eventID, userID uuid.UUID) error
+	Unattend(ctx context.Context, eventID, userID uuid.UUID) error
+	ListAttendees(ctx context.Context, eventID uuid.UUID, limit int) ([]*model.AttendeeUser, error)
 }
 
 type EventService struct{ store EventStorer }
@@ -59,4 +64,25 @@ func (s *EventService) DeleteEvent(ctx context.Context, eventID, userID uuid.UUI
 		return ErrNotFound
 	}
 	return nil
+}
+
+// NearbyEvents returns events within radiusM metres of (lon, lat) starting from `from`.
+// Defaults to 5000 m if radiusM <= 0.
+func (s *EventService) NearbyEvents(ctx context.Context, lon, lat float64, radiusM int, from time.Time, viewerID uuid.UUID) ([]*model.Event, error) {
+	if radiusM <= 0 {
+		radiusM = 5000
+	}
+	return s.store.Nearby(ctx, lon, lat, radiusM, from, viewerID)
+}
+
+func (s *EventService) AttendEvent(ctx context.Context, eventID, userID uuid.UUID) error {
+	return s.store.Attend(ctx, eventID, userID)
+}
+
+func (s *EventService) UnattendEvent(ctx context.Context, eventID, userID uuid.UUID) error {
+	return s.store.Unattend(ctx, eventID, userID)
+}
+
+func (s *EventService) ListAttendees(ctx context.Context, eventID uuid.UUID) ([]*model.AttendeeUser, error) {
+	return s.store.ListAttendees(ctx, eventID, 100)
 }

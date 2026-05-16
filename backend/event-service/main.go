@@ -57,6 +57,9 @@ func main() {
 		r.Get("/events", eventH.ListEvents)
 		r.Get("/events/{id}", eventH.GetEvent)
 		r.Delete("/events/{id}", eventH.DeleteEvent)
+		r.Post("/events/{id}/attend", eventH.Attend)
+		r.Delete("/events/{id}/attend", eventH.Unattend)
+		r.Get("/events/{id}/attendees", eventH.GetAttendees)
 	})
 
 	port := os.Getenv("PORT")

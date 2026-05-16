@@ -27,6 +27,15 @@ type Event struct {
 	AttendCount int             `json:"attend_count"`
 	IsAttending bool            `json:"is_attending"`
 	CreatedAt   time.Time       `json:"created_at"`
+	// DistanceM присутствует только в ответе nearby
+	DistanceM *float64 `json:"distance_m,omitempty"`
+}
+
+// AttendeeUser — участник события в списке attendees
+type AttendeeUser struct {
+	ID        uuid.UUID `json:"id"`
+	Username  *string   `json:"username"`
+	AvatarURL *string   `json:"avatar_url"`
 }
 
 type CreateEventInput struct {

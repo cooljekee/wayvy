@@ -21,6 +21,10 @@ type EventServicer interface {
 	ListEvents(ctx context.Context, viewerID uuid.UUID, limit, offset int) ([]*model.Event, int, error)
 	GetEvent(ctx context.Context, eventID, viewerID uuid.UUID) (*model.Event, error)
 	DeleteEvent(ctx context.Context, eventID, userID uuid.UUID) error
+	NearbyEvents(ctx context.Context, lon, lat float64, radiusM int, from time.Time, viewerID uuid.UUID) ([]*model.Event, error)
+	AttendEvent(ctx context.Context, eventID, userID uuid.UUID) error
+	UnattendEvent(ctx context.Context, eventID, userID uuid.UUID) error
+	ListAttendees(ctx context.Context, eventID uuid.UUID) ([]*model.AttendeeUser, error)
 }
 
 type EventHandler struct {
@@ -151,7 +155,85 @@ func (h *EventHandler) DeleteEvent(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// GET /events/nearby — stub for Task 3
+// GET /events/nearby?lat=&lon=&radius_m=&from=
 func (h *EventHandler) Nearby(w http.ResponseWriter, r *http.Request) {
-	respondJSON(w, http.StatusOK, map[string]any{"items": []struct{}{}})
+	viewerID := authmw.MustUserIDFromCtx(r.Context())
+
+	lon, err1 := strconv.ParseFloat(r.URL.Query().Get("lon"), 64)
+	lat, err2 := strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
+	if err1 != nil || err2 != nil {
+		respondError(w, http.StatusBadRequest, "lon and lat are required", "BAD_REQUEST")
+		return
+	}
+	radiusM, _ := strconv.Atoi(r.URL.Query().Get("radius_m"))
+
+	var from time.Time
+	if fromStr := r.URL.Query().Get("from"); fromStr != "" {
+		from, _ = time.Parse(time.RFC3339, fromStr)
+	}
+	if from.IsZero() {
+		from = time.Now()
+	}
+
+	events, err := h.svc.NearbyEvents(r.Context(), lon, lat, radiusM, from, viewerID)
+	if err != nil {
+		slog.ErrorContext(r.Context(), "Nearby internal error", "err", err)
+		respondError(w, http.StatusInternalServerError, "failed to get nearby events", "INTERNAL_ERROR")
+		return
+	}
+	if events == nil {
+		events = []*model.Event{}
+	}
+	respondJSON(w, http.StatusOK, map[string]any{"items": events})
+}
+
+// POST /events/{id}/attend
+func (h *EventHandler) Attend(w http.ResponseWriter, r *http.Request) {
+	userID := authmw.MustUserIDFromCtx(r.Context())
+	eventID, err := uuid.Parse(chi.URLParam(r, "id"))
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid event id", "BAD_REQUEST")
+		return
+	}
+	if err := h.svc.AttendEvent(r.Context(), eventID, userID); err != nil {
+		slog.ErrorContext(r.Context(), "Attend internal error", "err", err)
+		respondError(w, http.StatusInternalServerError, "failed to attend event", "INTERNAL_ERROR")
+		return
+	}
+	respondJSON(w, http.StatusOK, map[string]any{"ok": true})
+}
+
+// DELETE /events/{id}/attend
+func (h *EventHandler) Unattend(w http.ResponseWriter, r *http.Request) {
+	userID := authmw.MustUserIDFromCtx(r.Context())
+	eventID, err := uuid.Parse(chi.URLParam(r, "id"))
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid event id", "BAD_REQUEST")
+		return
+	}
+	if err := h.svc.UnattendEvent(r.Context(), eventID, userID); err != nil {
+		slog.ErrorContext(r.Context(), "Unattend internal error", "err", err)
+		respondError(w, http.StatusInternalServerError, "failed to unattend event", "INTERNAL_ERROR")
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// GET /events/{id}/attendees
+func (h *EventHandler) GetAttendees(w http.ResponseWriter, r *http.Request) {
+	eventID, err := uuid.Parse(chi.URLParam(r, "id"))
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid event id", "BAD_REQUEST")
+		return
+	}
+	attendees, err := h.svc.ListAttendees(r.Context(), eventID)
+	if err != nil {
+		slog.ErrorContext(r.Context(), "GetAttendees internal error", "err", err)
+		respondError(w, http.StatusInternalServerError, "failed to get attendees", "INTERNAL_ERROR")
+		return
+	}
+	if attendees == nil {
+		attendees = []*model.AttendeeUser{}
+	}
+	respondJSON(w, http.StatusOK, map[string]any{"items": attendees})
 }
