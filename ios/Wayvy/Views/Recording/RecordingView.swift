@@ -158,14 +158,14 @@ private struct RecordingHUDView: View {
         }
         .padding(.sp3)
         .background {
-            RoundedRectangle(cornerRadius: 26)
+            RoundedRectangle(cornerRadius: .radius28)
                 .fill(Color.wvInk900.opacity(0.82))
                 .background {
-                    RoundedRectangle(cornerRadius: 26)
+                    RoundedRectangle(cornerRadius: .radius28)
                         .fill(.ultraThinMaterial)
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 26)
+                    RoundedRectangle(cornerRadius: .radius28)
                         .strokeBorder(Color.white.opacity(0.10), lineWidth: 1)
                 }
                 .shadow(color: .black.opacity(0.55), radius: 18, y: 8)
@@ -184,8 +184,8 @@ private struct RecordingIndicator: View {
                 .foregroundStyle(Color(hex: "#FFD9D2"))
                 .kerning(1.2)
         }
-        .padding(.vertical, 5)
-        .padding(.horizontal, 9)
+        .padding(.vertical, .sp1)
+        .padding(.horizontal, .sp2)
         .background(Color.wvCoral500.opacity(0.18))
         .clipShape(Capsule())
     }
@@ -196,7 +196,7 @@ private struct MetricColumn: View {
     let unit: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: .sp1) {
             Text(value)
                 .font(.wvMetric)
                 .foregroundStyle(Color.wvInk50)
