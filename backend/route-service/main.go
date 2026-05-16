@@ -41,6 +41,10 @@ func main() {
 	routeSvc := service.NewRouteService(routeStore)
 	routeH := handler.NewRouteHandler(routeSvc)
 
+	waypointStore := store.NewWaypointStore(pool)
+	waypointSvc := service.NewWaypointService(waypointStore)
+	waypointH := handler.NewWaypointHandler(waypointSvc)
+
 	r := chi.NewRouter()
 	r.Use(chimw.RequestID)
 	r.Use(chimw.RealIP)
@@ -51,11 +55,21 @@ func main() {
 
 	r.Group(func(r chi.Router) {
 		r.Use(authmw.UserIDMiddleware)
+
+		// Routes — static "feed" registered before param {id}
 		r.Get("/routes/feed", routeH.GetFeed)
 		r.Post("/routes", routeH.CreateRoute)
 		r.Get("/routes", routeH.ListMyRoutes)
 		r.Get("/routes/{id}", routeH.GetRoute)
 		r.Delete("/routes/{id}", routeH.DeleteRoute)
+		r.Get("/routes/{id}/waypoints", waypointH.ListByRoute)
+
+		// Waypoints — static "nearby" registered before param {id}
+		r.Get("/waypoints/nearby", waypointH.Nearby)
+		r.Post("/waypoints", waypointH.CreateWaypoint)
+		r.Get("/waypoints/{id}", waypointH.GetWaypoint)
+		r.Post("/waypoints/{id}/photos", waypointH.AddPhoto)
+		r.Get("/waypoints/{id}/photos", waypointH.ListPhotos)
 	})
 
 	port := os.Getenv("PORT")

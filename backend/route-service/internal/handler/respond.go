@@ -19,3 +19,7 @@ func respondJSON(w http.ResponseWriter, status int, v any) {
 func respondError(w http.ResponseWriter, status int, msg, code string) {
 	respondJSON(w, status, errResponse{Error: msg, Code: code})
 }
+
+func decodeJSON(r *http.Request, v any) error {
+	return json.NewDecoder(r.Body).Decode(v)
+}
