@@ -15,6 +15,8 @@ import (
 
 	"github.com/cooljekee/wayvy/event-service/internal/handler"
 	authmw "github.com/cooljekee/wayvy/event-service/internal/middleware"
+	"github.com/cooljekee/wayvy/event-service/internal/service"
+	"github.com/cooljekee/wayvy/event-service/internal/store"
 )
 
 func main() {
@@ -35,6 +37,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	eventStore := store.NewEventStore(pool)
+	eventSvc := service.NewEventService(eventStore)
+	eventH := handler.NewEventHandler(eventSvc)
+
 	r := chi.NewRouter()
 	r.Use(chimw.RequestID)
 	r.Use(chimw.RealIP)
@@ -45,7 +51,12 @@ func main() {
 
 	r.Group(func(r chi.Router) {
 		r.Use(authmw.UserIDMiddleware)
-		// event endpoints will be registered here
+		// Static paths registered BEFORE parametric ones
+		r.Get("/events/nearby", eventH.Nearby)
+		r.Post("/events", eventH.CreateEvent)
+		r.Get("/events", eventH.ListEvents)
+		r.Get("/events/{id}", eventH.GetEvent)
+		r.Delete("/events/{id}", eventH.DeleteEvent)
 	})
 
 	port := os.Getenv("PORT")
