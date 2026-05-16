@@ -302,9 +302,3 @@ struct EventsView: View {
     }
 }
 
-// MARK: - Stubs (replaced in Tasks 7 & 8)
-
-struct EventDetailScreen: View {
-    var event: EventResponse
-    var body: some View { EmptyView() }
-}
